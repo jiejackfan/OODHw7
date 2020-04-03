@@ -23,6 +23,8 @@ public interface ReadOnlyModel {
    */
   List<IShape> getAnimation(int time);
 
+  List<IShape> getFrame(int time);
+
   /**
    * Return the complete animation as a string that discribes a shape and its list of motions.
    * declares a rectangle shape named R shape R rectangle describes the motions of shape R, between

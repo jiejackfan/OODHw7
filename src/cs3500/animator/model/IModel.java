@@ -7,6 +7,8 @@ package cs3500.animator.model;
  */
 public interface IModel extends ReadOnlyModel {
 
+  ////////////////////////////////////
+
   /**
    * This function will create a shape (out of rectangle, oval right now). User will store this
    * shape into two map data structures that will be used to represent the entire animation.
@@ -65,6 +67,8 @@ public interface IModel extends ReadOnlyModel {
                  double endHeight, int endColorR,
                  int endColorG, int endColorB);
 
+  void addKeyframe(String name, int time, int x, int y, double width,
+                   double height, int colorR, int colorG, int colorB);
 
   /**
    * Remove a motion from a list of motion for a given shape.

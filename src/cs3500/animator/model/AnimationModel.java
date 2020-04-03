@@ -23,11 +23,12 @@ public class AnimationModel implements IModel {
   private final Map<String, IShape> nameMap;
 
   /**
-   * This final hash map structure will store the entire animation.
-   *  key: a shape.
-   *  value: that key shape's list of motions.
+   * This final hash map structure will store the entire animation. key: a shape. value: that key
+   * shape's list of motions.
    */
   private final Map<IShape, List<Motion>> animation;
+
+  private final Map<IShape, List<Keyframe>> frames;
 
 
   private int maxTick;
@@ -45,6 +46,7 @@ public class AnimationModel implements IModel {
   public AnimationModel() {
     this.nameMap = new LinkedHashMap<>();
     this.animation = new LinkedHashMap<>();
+    this.frames = new LinkedHashMap<>();
   }
 
   @Override
@@ -58,6 +60,7 @@ public class AnimationModel implements IModel {
 
     nameMap.put(name, new Shape(name, DifferentShapes.valueOf(shape.toLowerCase())));
     animation.put(nameMap.get(name), new ArrayList<>());
+    frames.put(nameMap.get(name), new ArrayList<>());
   }
 
   @Override
@@ -67,6 +70,7 @@ public class AnimationModel implements IModel {
       throw new IllegalArgumentException("The given shape is not in the animation.");
     }
     animation.remove(nameMap.get(name));
+    frames.remove(nameMap.get(name));
     nameMap.remove(name);
   }
 
@@ -96,7 +100,26 @@ public class AnimationModel implements IModel {
                     new Color(endColorR, endColorG, endColorB)));
   }
 
+  @Override
+  public void addKeyframe(String name, int time, int x, int y, double width, double height,
+                          int colorR, int colorG, int colorB) {
+    // Check whether the given parameters of color are valid, if they are valid, pass into the color
+    // constructor, if not, throw an illegal argument exception.
+    if (!nameMap.containsKey(name)) {
+      throw new IllegalArgumentException("The name does not exist in current shapes.");
+    }
+    if (colorR < 0 || colorR > 255 || colorG < 0 || colorG > 255
+            || colorB < 0 || colorB > 255) {
+      throw new IllegalArgumentException("The RGB value must be within the range.");
+    }
 
+    // Other parameters are check when constructing the motion, and the parameters of position are
+    // checked in the position2D in the constructor of class position2D.
+    frames.get(nameMap.get(name)).add(new Keyframe(time, new Position2D(x, y), width, height,
+            new Color(colorR, colorG, colorB)));
+  }
+
+  ///////////////////////////////////
   @Override
   public String toString() {
     String output = "";
@@ -194,10 +217,47 @@ public class AnimationModel implements IModel {
     return shapesAtTime;
   }
 
+  @Override
+  public List<IShape> getFrame(int time) {
+
+    List<IShape> shapesAtTime = new ArrayList<>();
+
+    //go through all shapes in map, add to shapeAtTime if we find a shape that have motion at the
+    //  exact time
+    for (Map.Entry<IShape, List<Keyframe>> mapPair : frames.entrySet()) {
+      IShape tmpShape = mapPair.getKey();
+      List<Keyframe> tmpFrame;
+
+      if (isTimeInFrames(mapPair.getValue(), time)) {
+        tmpFrame = findFrame(mapPair.getValue(), time);
+        shapesAtTime.add(buildShape(tmpShape.getShapeName(), tmpFrame, time, tmpShape.getName()));
+      }
+    }
+    return shapesAtTime;
+  }
+
+  private List<Keyframe> findFrame(List<Keyframe> fs, int time) {
+    List<Keyframe> kfs = new ArrayList<>();
+    for (int i = 0; i < fs.size(); i++) {
+      int time1 = fs.get(i).getTime();
+      int time2 = fs.get(i + 1).getTime();
+      if (time >= time1 && time <= time2) {
+        kfs.add(fs.get(i));
+        kfs.add(fs.get(i + 1));
+      }
+    }
+    return kfs;
+  }
+
+  private boolean isTimeInFrames(List<Keyframe> fs, int time) {
+    int startTime = fs.get(0).getTime();
+    return (time >= startTime && time <= maxTick);
+  }
+
 
   /**
-   * Helper for getAnimation(). Checks the list of motion to see if the given time exist within
-   *  the time range of that list of motion.
+   * Helper for getAnimation(). Checks the list of motion to see if the given time exist within the
+   * time range of that list of motion.
    *
    * @param listOfMotion of a shape provided by the user.
    * @param time         that user wants to validate that exist.
@@ -281,7 +341,6 @@ public class AnimationModel implements IModel {
               DifferentShapes.valueOf(shape.toLowerCase()));
     }
   }
-
 
   @Override
   public void removeMotion(String name, int index) {
@@ -470,7 +529,8 @@ public class AnimationModel implements IModel {
     @Override
     public AnimationBuilder<IModel> addKeyframe(String name, int t, int x, int y, int w, int h,
                                                 int r, int g, int b) {
-      throw new UnsupportedOperationException("");
+      m.addKeyframe(name, t, x, y, w, h, r, g, b);
+      return this;
     }
   }
 
