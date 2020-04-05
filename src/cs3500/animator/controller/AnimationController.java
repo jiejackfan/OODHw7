@@ -2,11 +2,13 @@ package cs3500.animator.controller;
 
 import cs3500.animator.model.IModel;
 import cs3500.animator.view.EditView;
+import cs3500.animator.view.IEditView;
 import cs3500.animator.view.IView;
 import cs3500.animator.view.SVGView;
 import cs3500.animator.view.SwingView;
 import cs3500.animator.view.TextView;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -22,10 +24,10 @@ import javax.swing.Timer;
  */
 public class AnimationController implements IController, ActionListener {
   private IView v;
-  private IModel m;
+  protected IModel m;
 
-  Timer timer;
-  int currentTick = 0;
+  protected Timer timer;
+  protected int currentTick = 0;
 
   public static int DELAY;
 
@@ -41,6 +43,14 @@ public class AnimationController implements IController, ActionListener {
       if (m.getCurrentTick() < m.getMaxTick()) {
         currentTick = currentTick + 1;
         m.setTick(currentTick);
+      }
+      else if (m.getCurrentTick() == m.getMaxTick()) {
+        //if (v instanceof EditView) {
+          if (((EditView) v).getCheckState()) {
+            currentTick = 0;
+            m.setTick(currentTick);
+          }
+        //}
       }
       v.refresh();
     }
@@ -77,33 +87,51 @@ public class AnimationController implements IController, ActionListener {
     DELAY = (int) (1000 / tickPerSecond); // convert to ms per tick
   }
 
+
   @Override
   public void actionPerformed(ActionEvent e) {
+    IEditView v = (IEditView) this.v;
     switch (e.getActionCommand()) {
       //read from the input textfield
       case "Play Button":
-        this.playAnimation();
+        timer.start();
         break;
       case "Resume Button":
+        if (timer.isRunning()) {
+          timer.stop();
+          v.changeResumeButtonColor(Color.RED);
+        }
+        else {
+          timer.start();
+          v.changeResumeButtonColor(Color.GREEN);
+        }
         break;
       case "Restart Button":
-        timer.restart();
+        if (currentTick >= m.getMaxTick()) {
+          currentTick = 0;
+          timer.start();
+        }
+        else {
+          currentTick = 0;
+          timer.restart();
+        }
         break;
       case "Speed Up Button":
-        int newDelay1 = DELAY / 2;
-        this.setDelay(newDelay1);
+        int newDelay1 = DELAY - (DELAY / 5);
+        DELAY = newDelay1;
         timer.setDelay(newDelay1);
         break;
       case "Slow Down Button":
-        int newDelay2 = DELAY * 2;
-        this.setDelay(newDelay2);
+        int newDelay2 = DELAY + (DELAY / 5);
+        System.out.println(timer.getDelay());
+        DELAY = newDelay2;
         timer.setDelay(newDelay2);
         break;
       case "Repeat Box":
-        System.exit(0);
         break;
     }
   }
+
 
 
 }

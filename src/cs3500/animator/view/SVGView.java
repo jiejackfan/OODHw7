@@ -192,5 +192,4 @@ public class SVGView implements IView {
   public void addActionListener(ActionListener listener) {
 
   }
-
 }

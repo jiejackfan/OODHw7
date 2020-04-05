@@ -1,6 +1,7 @@
 package cs3500.animator.view;
 
 import cs3500.animator.model.ReadOnlyModel;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
@@ -10,12 +11,15 @@ import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-public class EditView extends JFrame implements IView {
+public class EditView extends JFrame implements IEditView {
 
   protected JButton playButton, resumeButton, restartButton, speedUpButton, slowDownButton;
+  protected JTextArea textArea;
+  protected double delay;
   protected JCheckBox repeatBox;
   protected JPanel controlPanel, editPanel, insertPanel, p;
 
@@ -40,6 +44,7 @@ public class EditView extends JFrame implements IView {
     playButton.setActionCommand("Play Button");
     controlPanel.add(playButton);
     resumeButton = new JButton("Pause/Resume");
+    resumeButton.setBackground(Color.GREEN);
     resumeButton.setActionCommand("Resume Button");
     controlPanel.add(resumeButton);
     restartButton = new JButton("Restart");
@@ -119,4 +124,15 @@ public class EditView extends JFrame implements IView {
     slowDownButton.addActionListener(actionListener);
     repeatBox.addActionListener(actionListener);
   }
+
+  @Override
+  public boolean getCheckState(){
+    return repeatBox.isSelected();
+  }
+
+  @Override
+  public void changeResumeButtonColor(Color color) {
+    resumeButton.setBackground(color);
+  }
+
 }

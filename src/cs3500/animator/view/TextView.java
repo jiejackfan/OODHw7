@@ -73,5 +73,4 @@ public class TextView implements IView {
   public void addActionListener(ActionListener listener) {
 
   }
-
 }

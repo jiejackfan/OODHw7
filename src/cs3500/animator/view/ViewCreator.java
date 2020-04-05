@@ -42,10 +42,16 @@ public class ViewCreator {
     } else if (viewType.svg == viewType.valueOf(type.toLowerCase())) {
       return new SVGView(m, width, height, x, y);
     }
-    else if (viewType.edit == viewType.valueOf(type.toLowerCase())) {
+    throw new IllegalStateException("Can't create the type of view class "
+            + "specifi ed in the input argument.");
+  }
+
+  public IEditView createEditView(String type, ReadOnlyModel m, int width, int height, int x,
+      int y) {
+    if (viewType.edit == viewType.valueOf(type.toLowerCase())) {
       return new EditView(m, width, height, x, y);
     }
     throw new IllegalStateException("Can't create the type of view class "
-            + "specified in the input argument.");
+        + "specified in the input argument.");
   }
 }

@@ -6,6 +6,8 @@ import cs3500.animator.model.AnimationModel;
 import cs3500.animator.model.IModel;
 import cs3500.animator.util.AnimationBuilder;
 import cs3500.animator.util.AnimationReader;
+import cs3500.animator.view.EditView;
+import cs3500.animator.view.IEditView;
 import cs3500.animator.view.IView;
 import cs3500.animator.view.ViewCreator;
 
@@ -13,6 +15,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import javax.swing.text.View;
 
 /**
  * Main function of this animator that will be converted into the .jar file. Accpets different
@@ -78,11 +81,20 @@ public class ExcellenceCLI {
       throw new IllegalArgumentException("The input file does not exist.");
     }
 
-    IView v = new ViewCreator().createViewBasedOnType(viewType, m, m.getCanvasWidth(),
-            m.getCanvasHeight(), m.getCanvasX(), m.getCanvasY());
-    v.setOutputFileName(outputFileName);
+    IController c;
 
-    IController c = new AnimationController(v, m);
+    if (viewType.equalsIgnoreCase("edit")) {
+      IEditView v = new ViewCreator().createEditView(viewType, m, m.getCanvasWidth(),
+          m.getCanvasHeight(), m.getCanvasX(), m.getCanvasY());
+      v.setOutputFileName(outputFileName);
+      c = new AnimationController(v, m);
+    }
+    else {
+      IView v = new ViewCreator().createViewBasedOnType(viewType, m, m.getCanvasWidth(),
+          m.getCanvasHeight(), m.getCanvasX(), m.getCanvasY());
+      v.setOutputFileName(outputFileName);
+      c = new AnimationController(v, m);
+    }
 
     c.setDelay(tickPerSecond);
     c.playAnimation();

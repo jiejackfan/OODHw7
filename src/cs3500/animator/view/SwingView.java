@@ -65,4 +65,5 @@ public class SwingView extends JFrame implements IView {
   public void addActionListener(ActionListener listener) {
 
   }
+
 }
