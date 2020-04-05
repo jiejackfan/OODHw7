@@ -12,7 +12,7 @@ public class ViewCreator {
    * Enum to represent the 3 different types of views a user can create.
    */
   public enum viewType {
-    text, svg, visual;
+    text, svg, visual, edit;
   }
 
   /**
@@ -41,6 +41,9 @@ public class ViewCreator {
       return new TextView(m);
     } else if (viewType.svg == viewType.valueOf(type.toLowerCase())) {
       return new SVGView(m, width, height, x, y);
+    }
+    else if (viewType.edit == viewType.valueOf(type.toLowerCase())) {
+      return new EditView(m, width, height, x, y);
     }
     throw new IllegalStateException("Can't create the type of view class "
             + "specified in the input argument.");

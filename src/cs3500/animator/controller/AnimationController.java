@@ -1,6 +1,7 @@
 package cs3500.animator.controller;
 
 import cs3500.animator.model.IModel;
+import cs3500.animator.view.EditView;
 import cs3500.animator.view.IView;
 import cs3500.animator.view.SVGView;
 import cs3500.animator.view.SwingView;
@@ -58,7 +59,7 @@ public class AnimationController implements IController {
   @Override
   public void playAnimation() {
     // check instanceof
-    if (v instanceof SwingView) {
+    if (v instanceof SwingView || v instanceof EditView) {
       v.render();
       timer = new Timer(DELAY, taskPerformer);
       timer.setRepeats(true);
