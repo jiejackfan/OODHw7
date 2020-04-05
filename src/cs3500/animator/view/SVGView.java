@@ -5,6 +5,7 @@ import cs3500.animator.model.IShape;
 import cs3500.animator.model.Motion;
 import cs3500.animator.model.ReadOnlyModel;
 
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -185,6 +186,11 @@ public class SVGView implements IView {
   @Override
   public void setDelay(int delay) {
     this.delay = delay;
+  }
+
+  @Override
+  public void addActionListener(ActionListener listener) {
+
   }
 
 }

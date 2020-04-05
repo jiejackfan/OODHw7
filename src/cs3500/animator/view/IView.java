@@ -1,5 +1,7 @@
 package cs3500.animator.view;
 
+import java.awt.event.ActionListener;
+
 /**
  * View for animation: display the animation panel and provide visual to the user. This class will
  * take care of render (starting) the view, refreshing the view everytime controller updates its
@@ -37,4 +39,17 @@ public interface IView {
    * @param delay the given delay.
    */
   void setDelay(int delay);
+
+  /**
+   * this is to force the view to have a method to set up actions for buttons.
+   * All the buttons must be given this action listener
+   * <p>
+   * Thus our Swing-based implementation of this interface will already have such a
+   * method.
+   *
+   * @param listener
+   */
+
+  void addActionListener(ActionListener listener);
+
 }
