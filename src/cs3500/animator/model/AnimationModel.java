@@ -85,7 +85,7 @@ public class AnimationModel implements IModel {
                         int endColorB) {
     // Check whether the given parameters of color are valid, if they are valid, pass into the color
     // constructor, if not, throw an illegal argument exception.
-    if (!nameMap.containsKey(name)) {
+    if (name == null || name.equals("") || !nameMap.containsKey(name)) {
       throw new IllegalArgumentException("The name does not exist in current shapes.");
     }
     if (startColorR < 0 || startColorR > 255 || endColorR < 0 || endColorR > 255
@@ -108,7 +108,7 @@ public class AnimationModel implements IModel {
                           int colorR, int colorG, int colorB) {
     // Check whether the given parameters of color are valid, if they are valid, pass into the color
     // constructor, if not, throw an illegal argument exception.
-    if (!nameMap.containsKey(name)) {
+    if (name == null || name.equals("") || !nameMap.containsKey(name)) {
       throw new IllegalArgumentException("The name does not exist in current shapes.");
     }
     if (colorR < 0 || colorR > 255 || colorG < 0 || colorG > 255
@@ -124,7 +124,7 @@ public class AnimationModel implements IModel {
 
   @Override
   public void deleteKeyframe(String name, int index) {
-    if (!nameMap.containsKey(name)) {
+    if (name == null || name.equals("") || !nameMap.containsKey(name)) {
       throw new IllegalArgumentException("The name does not exist in current shapes.");
     }
     IShape shape = nameMap.get(name);
@@ -141,7 +141,7 @@ public class AnimationModel implements IModel {
   @Override
   public void insertKeyframe(String name, int time) {
 
-    if (!nameMap.containsKey(name)) {
+    if (name == null || name.equals("") || !nameMap.containsKey(name)) {
       throw new IllegalArgumentException("The name does not exist in current shapes.");
     }
     IShape shape = nameMap.get(name);
@@ -150,8 +150,6 @@ public class AnimationModel implements IModel {
     }
     if (time < 0) {
       throw new IllegalArgumentException("The time is invalid.");
-    } else if (time > maxTick) {
-      maxTick = time;
     }
     int startTime = frames.get(shape).get(0).getTime();
     int endTime = frames.get(shape).get(frames.get(shape).size() - 1).getTime();
@@ -169,6 +167,41 @@ public class AnimationModel implements IModel {
     } else {
       insertFrame(shape.getShapeName(), frames.get(shape), time, name);
     }
+    if (time > maxTick) {
+      maxTick = time;
+    }
+  }
+
+  @Override
+  public void modifyKeyframe(String name, int time, Position2D position, double width,
+                             double height, Color color) {
+    // Must have a name
+    if (name == null || name.equals("") || !nameMap.containsKey(name)) {
+      throw new IllegalArgumentException("The name does not exist in current shapes.");
+    }
+    // The given shape must have frame(s)
+    IShape shape = nameMap.get(name);
+    if (frames.get(shape).isEmpty()) {
+      throw new IllegalArgumentException("The shape does not have any frame.");
+    }
+    // Must be a valid time -- one of the times of all keyframes
+    if (!hasKeyFrame(frames.get(shape), time)) {
+      throw new IllegalArgumentException("The given time does not have a frame yet.");
+    } else {
+      for (Keyframe kf : frames.get(shape)) {
+        if (kf.getTime() == time) {
+          if (position != null) {
+            kf.setPosition(position);
+          }
+          if ()
+        }
+
+      }
+
+
+    }
+
+
   }
 
   private void insertFrame(String shape, List<Keyframe> fs, int time, String name) {
