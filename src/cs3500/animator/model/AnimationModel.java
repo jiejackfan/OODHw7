@@ -230,10 +230,54 @@ public class AnimationModel implements IModel {
 
       if (isTimeInFrames(mapPair.getValue(), time)) {
         tmpFrame = findFrame(mapPair.getValue(), time);
-        shapesAtTime.add(buildShape(tmpShape.getShapeName(), tmpFrame, time, tmpShape.getName()));
+        shapesAtTime.add(buildShapeFromFrame(tmpShape.getShapeName(),
+                tmpFrame, time, tmpShape.getName()));
       }
     }
     return shapesAtTime;
+  }
+
+  private IShape buildShapeFromFrame(String shape, List<Keyframe> tmpFrame,
+                                     int time, String name) {
+    //if the time has passed the ending time
+    Keyframe startFrame = tmpFrame.get(0);
+    Keyframe endFrame = tmpFrame.get(1);
+    if (time > endFrame.getTime() && time <= maxTick) {
+      return new Shape(endFrame.getColor(), endFrame.getPosition(), endFrame.getWidth(),
+              endFrame.getHeight(), name, DifferentShapes.valueOf(shape.toLowerCase()));
+    }
+    //if starttime the time given
+    else if (time == startFrame.getTime()) {
+      return new Shape(startFrame.getColor(), startFrame.getPosition(),
+              startFrame.getWidth(), startFrame.getHeight(), name,
+              DifferentShapes.valueOf(shape.toLowerCase()));
+    }
+    //else if the time has not passed ending time
+    else {
+      double ratio = (double) (time - startFrame.getTime())
+              / (endFrame.getTime() - startFrame.getTime());
+      Color color = new Color(
+              (int) (ratio * (endFrame.getColor().getRed() - startFrame.getColor().getRed())
+                      + startFrame.getColor().getRed()),
+              (int) (ratio * (endFrame.getColor().getGreen()
+                      - startFrame.getColor().getGreen())
+                      + startFrame.getColor().getGreen()),
+              (int) (ratio * (endFrame.getColor().getBlue()
+                      - startFrame.getColor().getBlue())
+                      + startFrame.getColor().getBlue()));
+      Position2D position = new Position2D(
+              ratio * (endFrame.getPosition().getX() - startFrame.getPosition().getX())
+                      + startFrame.getPosition().getX(),
+              ratio * (endFrame.getPosition().getY() - startFrame.getPosition().getY())
+                      + startFrame.getPosition().getY());
+      double width = ratio * (endFrame.getWidth() - startFrame.getWidth())
+              + startFrame.getWidth();
+      double height = ratio * (endFrame.getHeight() - startFrame.getHeight())
+              + startFrame.getHeight();
+
+      return new Shape(color, position, width, height, name,
+              DifferentShapes.valueOf(shape.toLowerCase()));
+    }
   }
 
   private List<Keyframe> findFrame(List<Keyframe> fs, int time) {
@@ -304,7 +348,7 @@ public class AnimationModel implements IModel {
    */
   private IShape buildShape(String shape, Motion tmpMotion, int time, String name) {
     //if the time has passed the ending time
-    if (time > tmpMotion.getEndTime() && time <= getMaxTick()) {
+    if (time > tmpMotion.getEndTime() && time <= maxTick) {
       return new Shape(tmpMotion.getEndColor(), tmpMotion.getEndPosition(), tmpMotion.getEndWidth(),
               tmpMotion.getEndHeight(), name, DifferentShapes.valueOf(shape.toLowerCase()));
     }
