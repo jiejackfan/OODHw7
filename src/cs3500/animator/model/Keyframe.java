@@ -135,7 +135,7 @@ public class Keyframe {
    *
    * @param time the user wants to change as the new start time.
    */
-  public void changeTime(int time) {
+  public void setTime(int time) {
     this.time = time;
   }
 

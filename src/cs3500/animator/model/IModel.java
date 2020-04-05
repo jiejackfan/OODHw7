@@ -70,6 +70,11 @@ public interface IModel extends ReadOnlyModel {
   void addKeyframe(String name, int time, int x, int y, double width,
                    double height, int colorR, int colorG, int colorB);
 
+  void deleteKeyframe(String name, int index);
+
+  void insertKeyframe(String name, int time);
+
+
   /**
    * Remove a motion from a list of motion for a given shape.
    *

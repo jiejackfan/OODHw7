@@ -6,9 +6,11 @@ import java.awt.Color;
 import java.security.Key;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * The animation model implementation. It will implement all methods declared in IModel and
@@ -118,6 +120,76 @@ public class AnimationModel implements IModel {
     // checked in the position2D in the constructor of class position2D.
     frames.get(nameMap.get(name)).add(new Keyframe(time, new Position2D(x, y), width, height,
             new Color(colorR, colorG, colorB)));
+  }
+
+  @Override
+  public void deleteKeyframe(String name, int index) {
+    if (!nameMap.containsKey(name)) {
+      throw new IllegalArgumentException("The name does not exist in current shapes.");
+    }
+    IShape shape = nameMap.get(name);
+    if (frames.get(shape).isEmpty()) {
+      throw new IllegalArgumentException("The shape does not have any frame.");
+    }
+    if (index < 0 || index > frames.get(shape).size() - 1) {
+      throw new IllegalArgumentException("Invalid frame index.");
+    } else {
+      frames.get(name).remove(index);
+    }
+  }
+
+  @Override
+  public void insertKeyframe(String name, int time) {
+
+    if (!nameMap.containsKey(name)) {
+      throw new IllegalArgumentException("The name does not exist in current shapes.");
+    }
+    IShape shape = nameMap.get(name);
+    if (frames.get(shape).isEmpty()) {
+      throw new IllegalArgumentException("The shape does not have any frame.");
+    }
+    if (time < 0) {
+      throw new IllegalArgumentException("The time is invalid.");
+    } else if (time > maxTick) {
+      maxTick = time;
+    }
+    int startTime = frames.get(shape).get(0).getTime();
+    int endTime = frames.get(shape).get(frames.get(shape).size() - 1).getTime();
+    if (time < startTime) {
+      Keyframe tmpFrame1 = new Keyframe(frames.get(shape).get(0));
+      tmpFrame1.setTime(time);
+      frames.get(shape).add(0, tmpFrame1);
+    } else if (time > endTime) {
+      Keyframe tmpFrame2 = new Keyframe(frames.get(shape).get(frames.get(shape).size() - 1));
+      tmpFrame2.setTime(time);
+      frames.get(shape).add(tmpFrame2);
+    }
+    if (hasKeyFrame(frames.get(shape), time)) {
+      throw new IllegalArgumentException("The keyframe at this time already exist.");
+    } else {
+      insertFrame(shape.getShapeName(), frames.get(shape), time, name);
+    }
+  }
+
+  private void insertFrame(String shape, List<Keyframe> fs, int time, String name) {
+    for (int i = 0; i < fs.size() - 1; i++) {
+      int time1 = fs.get(i).getTime();
+      int time2 = fs.get(i + 1).getTime();
+      if (time > time1 && time < time2) {
+        IShape newShape = buildShapeFromFrame(shape, fs, time, name);
+        Keyframe tmpKeyframe = new Keyframe(time, newShape.getPosition(),
+                newShape.getWidth(), newShape.getHeight(), newShape.getColor());
+        fs.add(i + 1, tmpKeyframe);
+      }
+    }
+  }
+
+  private boolean hasKeyFrame(List<Keyframe> keyframes, int time) {
+    Set times = new HashSet();
+    for (Keyframe kf : keyframes) {
+      times.add(kf.getTime());
+    }
+    return times.contains(time);
   }
 
   ///////////////////////////////////
