@@ -2,6 +2,7 @@ package cs3500.animator.view;
 
 import cs3500.animator.model.ReadOnlyModel;
 
+import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 
 /**
@@ -58,5 +59,10 @@ public class SwingView extends JFrame implements IView {
   @Override
   public void setDelay(int delay) {
     throw new UnsupportedOperationException("This is not supported");
+  }
+
+  @Override
+  public void addActionListener(ActionListener listener) {
+
   }
 }

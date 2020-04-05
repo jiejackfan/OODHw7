@@ -10,6 +10,8 @@ import cs3500.animator.view.TextView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.Timer;
 
 
@@ -18,7 +20,7 @@ import javax.swing.Timer;
  * will take control of the timing (ticks per second) of our animation. It will tell the model the
  * current tick and tell view to update when a new tick happens.
  */
-public class AnimationController implements IController {
+public class AnimationController implements IController, ActionListener {
   private IView v;
   private IModel m;
 
@@ -54,6 +56,7 @@ public class AnimationController implements IController {
   public AnimationController(IView v, IModel m) {
     this.v = v;
     this.m = m;
+    v.addActionListener(this);
   }
 
   @Override
@@ -62,7 +65,6 @@ public class AnimationController implements IController {
     if (v instanceof SwingView || v instanceof EditView) {
       v.render();
       timer = new Timer(DELAY, taskPerformer);
-      timer.setRepeats(true);
       timer.start();
     } else if (v instanceof TextView || v instanceof SVGView) {
       v.setDelay(DELAY);
@@ -74,5 +76,34 @@ public class AnimationController implements IController {
   public void setDelay(double tickPerSecond) {
     DELAY = (int) (1000 / tickPerSecond); // convert to ms per tick
   }
+
+  @Override
+  public void actionPerformed(ActionEvent e) {
+    switch (e.getActionCommand()) {
+      //read from the input textfield
+      case "Play Button":
+        this.playAnimation();
+        break;
+      case "Resume Button":
+        break;
+      case "Restart Button":
+        timer.restart();
+        break;
+      case "Speed Up Button":
+        int newDelay1 = DELAY / 2;
+        this.setDelay(newDelay1);
+        timer.setDelay(newDelay1);
+        break;
+      case "Slow Down Button":
+        int newDelay2 = DELAY * 2;
+        this.setDelay(newDelay2);
+        timer.setDelay(newDelay2);
+        break;
+      case "Repeat Box":
+        System.exit(0);
+        break;
+    }
+  }
+
 
 }

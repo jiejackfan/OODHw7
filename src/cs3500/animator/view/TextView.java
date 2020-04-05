@@ -1,5 +1,6 @@
 package cs3500.animator.view;
 
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -66,6 +67,11 @@ public class TextView implements IView {
   @Override
   public void setDelay(int delay) {
     // do nothing
+  }
+
+  @Override
+  public void addActionListener(ActionListener listener) {
+
   }
 
 }
