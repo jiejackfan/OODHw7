@@ -173,8 +173,8 @@ public class AnimationModel implements IModel {
   }
 
   @Override
-  public void modifyKeyframe(String name, int time, Position2D position, double width,
-                             double height, Color color) {
+  public void modifyKeyframe(String name, int time, int x, int y, double width,
+      double height, int colorR, int colorG, int colorB) {
     // Must have a name
     if (name == null || name.equals("") || !nameMap.containsKey(name)) {
       throw new IllegalArgumentException("The name does not exist in current shapes.");
@@ -190,18 +190,18 @@ public class AnimationModel implements IModel {
     } else {
       for (Keyframe kf : frames.get(shape)) {
         if (kf.getTime() == time) {
-          if (position != null) {
-            kf.setPosition(position);
+          if (width <= 0 || height <= 0 || colorR < 0 || colorR > 255
+              || colorG < 0 || colorG > 255 || colorB < 0 || colorB > 255) {
+            throw new IllegalArgumentException("Invalid inputs,cannot modify the keyframe.");
+          } else {
+            kf.setPosition(new Position2D(x, y));
+            kf.setWidth(width);
+            kf.setHeight(height);
+            kf.setColor(new Color(colorR, colorG, colorB));
           }
-          //if ()
         }
-
       }
-
-
     }
-
-
   }
 
   private void insertFrame(String shape, List<Keyframe> fs, int time, String name) {
