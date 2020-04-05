@@ -1,11 +1,7 @@
 package cs3500.animator.view;
 
-import cs3500.animator.model.IModel;
 import cs3500.animator.model.ReadOnlyModel;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -49,9 +45,16 @@ public class EditView extends JFrame implements IView {
     editPanel.add(new JTextField(1));
     editPanel.add(new JTextField(1));
     editPanel.add(new JTextField(1));
-    editPanel.add(new JButton("Insert"));
-    editPanel.add(new JButton("Delete"));
+    editPanel.add(new JButton("Modify"));
     p.add(editPanel);
+
+    JPanel insertPanel = new JPanel();
+    insertPanel.setLayout(new BoxLayout(insertPanel, BoxLayout.Y_AXIS));
+    insertPanel.add(new JTextField(1));
+    insertPanel.add(new JTextField(1));
+    insertPanel.add(new JButton("Insert"));
+    insertPanel.add(new JButton("Delete"));
+    p.add(insertPanel);
 
     add(p);
     pack();
