@@ -12,7 +12,9 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.swing.Timer;
 
@@ -128,6 +130,91 @@ public class AnimationController implements IController, ActionListener {
         timer.setDelay(newDelay2);
         break;
       case "Repeat Box":
+        break;
+      case "Modify Keyframe":
+        List<String> tmp4 = v.getEditPanelInput();
+        int time = 0, x = 0, y = 0, red = 0, green = 0, blue = 0;
+        double width = 0.0, height = 0.0;
+        try {
+         String[] positions = tmp4.get(2).split(" ");
+         if (positions.length != 2) {
+           throw new IllegalArgumentException("input for position "
+               + "must be 2 integer seperated by space.");
+         }
+
+         String[] colors = tmp4.get(5).split(" ");
+         if (colors.length != 3) {
+           throw new IllegalArgumentException("input for colors must be 3 integers sperated "
+               + "by spaces.");
+         }
+
+         time = Integer.parseInt(tmp4.get(1));
+         x = Integer.parseInt(positions[0]);
+         y= Integer.parseInt(positions[1]);
+         width = Integer.parseInt(tmp4.get(3));
+         height = Integer.parseInt(tmp4.get(4));
+         red = Integer.parseInt(colors[0]);
+         green = Integer.parseInt(colors[1]);
+         blue = Integer.parseInt(colors[2]);
+        } catch (IllegalArgumentException nfe) {
+          v.showErrorMsg(nfe.getMessage());
+        }
+        try {
+          m.modifyKeyframe(tmp4.get(0), time, x, y, width, height, red, green, blue);
+        } catch (IllegalArgumentException iae) {
+          v.showErrorMsg(iae.getMessage());
+        }
+        break;
+      case "Insert Keyframe":
+        List<String> tmp2 = v.getInsertPanelInput();
+        try {
+          int tmpInt = Integer.parseInt(tmp2.get(1));
+          m.insertKeyframe(tmp2.get(0), tmpInt);
+        } catch (NumberFormatException nfe) {
+          v.showErrorMsg("You must enter an int for time");
+        } catch (IllegalArgumentException iae){
+          v.showErrorMsg(iae.getMessage());
+        }
+        break;
+      case "Delete Keyframe":
+        List<String> tmp3 = v.getInsertPanelInput();
+        try {
+          int tmpInt = Integer.parseInt(tmp3.get(1));
+          m.deleteKeyframe(tmp3.get(0), tmpInt);
+        } catch (NumberFormatException nfe) {
+          v.showErrorMsg("You must enter an int for time");
+        } catch (IllegalArgumentException iae){
+          v.showErrorMsg(iae.getMessage());
+        }
+        break;
+      case "Create Shape":
+        List<String> tmp = v.getShapePanelInput();
+        try {
+          m.createShape(tmp.get(0), tmp.get(1));
+        } catch (IllegalArgumentException iae){
+          if (iae.getMessage().equals("The name cannot be null or empty.")) {
+            v.showErrorMsg("Did not enter a valid shape name");
+          }
+          if (iae.getMessage().equals("Invalid shape input.")) {
+            v.showErrorMsg("Did not enter a valid shape type");
+          }
+          if (iae.getMessage().equals("Shape exists, can't add again.")) {
+            v.showErrorMsg("Shape exists, don't add again");
+          }
+        }
+        break;
+      case "Delete Shape":
+        List<String> tmp1 = v.getShapePanelInput();
+        try {
+          m.removeShape(tmp1.get(1));
+        } catch (IllegalArgumentException iae){
+          if (iae.getMessage().equals("The given shape is not in the animation.")) {
+            v.showErrorMsg("Did not enter a valid shape name");
+          }
+        }
+        break;
+      default:
+        v.showErrorMsg("Invalid command");
         break;
     }
   }

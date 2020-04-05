@@ -61,6 +61,11 @@ public class AnimationModel implements IModel {
       throw new IllegalArgumentException("Invalid shape input.");
     }
 
+    if (nameMap.containsKey(name)
+        && nameMap.containsValue(new Shape(name, DifferentShapes.valueOf(shape.toLowerCase())))) {
+      throw new IllegalArgumentException("Shape exists, can't add again.");
+    }
+
     nameMap.put(name, new Shape(name, DifferentShapes.valueOf(shape.toLowerCase())));
     animation.put(nameMap.get(name), new ArrayList<>());
     frames.put(nameMap.get(name), new ArrayList<>());
