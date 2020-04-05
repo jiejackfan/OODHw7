@@ -1,5 +1,7 @@
 package cs3500.animator.model;
 
+import java.awt.*;
+
 /**
  * The model interface that contains functions that can mutate the model. This Animation model
  * interface can create a shape, remove a shape, add motions to a shape, remove motions, and
@@ -73,6 +75,9 @@ public interface IModel extends ReadOnlyModel {
   void deleteKeyframe(String name, int index);
 
   void insertKeyframe(String name, int time);
+
+  void modifyKeyframe(String name, int time, Position2D position, double width, double height,
+                      Color color);
 
 
   /**

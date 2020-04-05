@@ -139,5 +139,21 @@ public class Keyframe {
     this.time = time;
   }
 
+  public void setPosition(Position2D position) {
+    this.position = position;
+  }
+
+  public void setWidth(double width) {
+    this.width = width;
+  }
+
+  public void setHeight(double height) {
+    this.height = height;
+  }
+
+  public void setColor(Color color) {
+    this.color = color;
+  }
+
 
 }
