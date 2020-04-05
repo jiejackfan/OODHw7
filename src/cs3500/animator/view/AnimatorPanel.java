@@ -34,7 +34,8 @@ public class AnimatorPanel extends JPanel {
     super.paintComponent(g);
     Graphics2D g2 = (Graphics2D) g;
 
-    List<IShape> listOfShape = m.getAnimation(m.getCurrentTick());
+    //List<IShape> listOfShape = m.getAnimation(m.getCurrentTick());
+    List<IShape> listOfShape = m.getFrame(m.getCurrentTick());
 
     //Go through each shape in the List of shape and draw the corresponding shape.
     //Draws the shapes in order from first to last so the last object will be on top.
@@ -43,7 +44,8 @@ public class AnimatorPanel extends JPanel {
         g2.setColor(shape.getColor());
         g2.fillRect((int) shape.getPosition().getX(), (int) shape.getPosition().getY(),
                 (int) shape.getWidth(), (int) shape.getHeight());
-      } else if (shape.getShape() == DifferentShapes.oval
+      }
+      else if (shape.getShape() == DifferentShapes.oval
               || shape.getShape() == DifferentShapes.ellipse) {
         g2.setColor(shape.getColor());
         g2.fillOval((int) shape.getPosition().getX(), (int) shape.getPosition().getY(),

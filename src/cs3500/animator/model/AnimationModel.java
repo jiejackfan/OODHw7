@@ -3,6 +3,7 @@ package cs3500.animator.model;
 import cs3500.animator.util.AnimationBuilder;
 
 import java.awt.Color;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -282,10 +283,15 @@ public class AnimationModel implements IModel {
 
   private List<Keyframe> findFrame(List<Keyframe> fs, int time) {
     List<Keyframe> kfs = new ArrayList<>();
-    for (int i = 0; i < fs.size(); i++) {
+    for (int i = 0; i < fs.size() - 1; i++) {
       int time1 = fs.get(i).getTime();
       int time2 = fs.get(i + 1).getTime();
-      if (time >= time1 && time <= time2) {
+
+      if (i == fs.size() - 2 && time > time2) {
+        kfs.add(fs.get(i));
+        kfs.add(fs.get(i + 1));
+      }
+      else if (time >= time1 && time <= time2) {
         kfs.add(fs.get(i));
         kfs.add(fs.get(i + 1));
       }
@@ -461,6 +467,7 @@ public class AnimationModel implements IModel {
       return a.getStartTime() - b.getEndTime();
     }
   }
+
 
   @Override
   public void setCanvas(int x, int y, int w, int h) {
