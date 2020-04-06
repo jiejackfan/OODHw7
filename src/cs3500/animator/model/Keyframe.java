@@ -2,7 +2,10 @@ package cs3500.animator.model;
 
 import java.awt.*;
 
-
+/**
+ * This class represents a state of a time of one particular shape. The states include:  time,
+ * width, height, position, color.
+ */
 public class Keyframe {
 
   // time.
@@ -19,22 +22,16 @@ public class Keyframe {
   private Color color;
 
   /**
-   * Public constructor 1 for motion. This is used when model wants to enter a new motion into a
-   * shape's list of motions. The following parameters will be given by the input file.
+   * Public constructor for keyframe. This is used when model wants to enter a new keyframe into a
+   * shape's list of keyframes.
    *
-   * @param startTime     starting time.
-   * @param startPosition starting position.
-   * @param startWidth    starting width.
-   * @param startHeight   starting height.
-   * @param startColor    starting color.
-   * @param endTime       ending time.
-   * @param endPosition   ending position.
-   * @param endWidth      ending width.
-   * @param endHeight     ending height.
-   * @param endColor      ending color.
-   * @throws IllegalArgumentException if starting and ending times are less than 1.
-   * @throws IllegalArgumentException if starting time is greater than ending time.
-   * @throws IllegalArgumentException if any width or height are negative.
+   * @param time     the given time
+   * @param position the given position
+   * @param width    the given width
+   * @param height   the given height
+   * @param color    the given color
+   * @throws IllegalArgumentException if the given time is less than 0
+   * @throws IllegalArgumentException if any width or height are negative
    */
   public Keyframe(int time, Position2D position, double width, double height,
                   Color color) {
@@ -46,7 +43,6 @@ public class Keyframe {
     if (width < 0 || height < 0) {
       throw new IllegalArgumentException("The size must be positive.");
     }
-
     this.time = time;
     this.position = position;
     this.width = width;
@@ -55,13 +51,12 @@ public class Keyframe {
   }
 
   /**
-   * Copy constructor of a motion. This will be used when we want to create a copy of this motion in
-   * the model.
+   * Copy constructor of a keyframe. This will be used when we want to create a copy of this
+   * keyframe in the model.
    *
-   * @param motion a motion that we want to copy in the model.
+   * @param kf a motion that we want to copy in the model.
    */
   public Keyframe(Keyframe kf) {
-
     this.time = kf.time;
     this.position = kf.position;
     this.width = kf.width;
@@ -83,27 +78,27 @@ public class Keyframe {
   }
 
   /**
-   * Getter function to get start time.
+   * Getter function to get time.
    *
-   * @return start time.
+   * @return time
    */
   public int getTime() {
     return time;
   }
 
   /**
-   * Getter function to get start position.
+   * Getter function to get position.
    *
-   * @return start position.
+   * @return position
    */
   public Position2D getPosition() {
     return position;
   }
 
   /**
-   * Getter function to get start width.
+   * Getter function to get width.
    *
-   * @return start width.
+   * @return width
    */
   public double getWidth() {
     return width;
@@ -111,9 +106,9 @@ public class Keyframe {
 
 
   /**
-   * Getter function to get start height.
+   * Getter function to get height.
    *
-   * @return start height.
+   * @return height
    */
   public double getHeight() {
     return height;
@@ -121,9 +116,9 @@ public class Keyframe {
 
 
   /**
-   * Getter function to get start color.
+   * Getter function to get color.
    *
-   * @return start color.
+   * @return color
    */
   public Color getColor() {
     return color;
@@ -131,29 +126,48 @@ public class Keyframe {
 
 
   /**
-   * Function to change start time. Not used currently in our implementation.
+   * Function to change time.
    *
-   * @param time the user wants to change as the new start time.
+   * @param time the user wants to change as the new time
    */
   public void setTime(int time) {
     this.time = time;
   }
 
+  /**
+   * Function to change position.
+   *
+   * @param position the user wants to change as the new position
+   */
   public void setPosition(Position2D position) {
     this.position = position;
   }
 
+  /**
+   * Function to change width.
+   *
+   * @param width the user wants to change as the new width
+   */
   public void setWidth(double width) {
     this.width = width;
   }
 
+  /**
+   * Function to change height.
+   *
+   * @param height the user wants to change as the new height
+   */
   public void setHeight(double height) {
     this.height = height;
   }
 
+  /**
+   * Function to change color.
+   *
+   * @param color the user wants to change as the new color
+   */
   public void setColor(Color color) {
     this.color = color;
   }
-
 
 }

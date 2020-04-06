@@ -10,7 +10,6 @@ import java.awt.*;
 public interface IModel extends ReadOnlyModel {
 
   ////////////////////////////////////
-
   /**
    * This function will create a shape (out of rectangle, oval right now). User will store this
    * shape into two map data structures that will be used to represent the entire animation.
@@ -69,20 +68,82 @@ public interface IModel extends ReadOnlyModel {
                  double endHeight, int endColorR,
                  int endColorG, int endColorB);
 
+  /**
+   * This function will add one keyframe (a state of a shape at a time) into a list of keyframes to
+   * a corresponding shape.
+   *
+   * @param name   the custom name of the shape that user wants to add the motion to
+   * @param time   time of the shape
+   * @param x      position X of the shape
+   * @param y      position Y of the shape
+   * @param width  width of the shape
+   * @param height height of the shape
+   * @param colorR red color of the shape
+   * @param colorG blue color of the shape
+   * @param colorB green color of the shape
+   * @throws IllegalArgumentException if the str name given by the user does not exist or empty or
+   *                                  null in current animation
+   * @throws IllegalArgumentException if the time given by the user is less than 0
+   * @throws IllegalArgumentException if the given colors (starting and ending) R, G, B are not
+   *                                  within the range between 0 to 255 (including 0 to 255)
+   * @throws IllegalArgumentException if the given width and height (starting and ending) are
+   *                                  negative
+   */
   void addKeyframe(String name, int time, int x, int y, double width,
                    double height, int colorR, int colorG, int colorB);
 
+  /**
+   * Remove a keyframe from a list of keyframes for a given shape by the given index.
+   *
+   * @param name  arbitrary str name that user assigned to their shape upon initialization
+   * @param index the index of the keyframe the user wants to delete
+   * @throws IllegalArgumentException if the str name given by the user does not exist or empty or
+   *                                  null in current animation
+   * @throws IllegalArgumentException if the index given by the user is invalid
+   */
   void deleteKeyframe(String name, int index);
 
+  /**
+   * Insert a keyframe at the given time. This action will not affect the appearance of the original
+   * animation. The only thing it does is adding a keyframe at the given time, if there is no
+   * keyframe for the time yet, without changing the animation. If there is no frame yet for a
+   * shape, then a default keyframe will be added at the given time.
+   *
+   * @param name the name of the shape
+   * @param time the insertion time
+   * @throws IllegalArgumentException if the str name given by the user does not exist or empty or
+   *                                  null in current animation
+   * @throws IllegalArgumentException if the time given by the user is invalid
+   * @throws IllegalArgumentException if the time given by the user already has a corresponding
+   *                                  keyframe
+   */
   void insertKeyframe(String name, int time);
 
+  /**
+   * Modify a keyframe of the given shape at the given time.
+   *
+   * @param name   the name of the shape
+   * @param time   the time that you want to modify
+   * @param x      the position x of the shape
+   * @param y      the position y of the shape
+   * @param width  the width of the shape
+   * @param height the height of the shape
+   * @param colorR the red component of the shape
+   * @param colorG the green component of the shape
+   * @param colorB the blue component of the shape
+   * @throws IllegalArgumentException if the str name given by the user does not exist or empty or
+   *                                  null in current animation
+   * @throws IllegalArgumentException if the given position, color, or size is invalid
+   * @throws IllegalArgumentException if the time given by the user does not have a corresponding
+   *                                  keyframe or no keyframes at all
+   */
   void modifyKeyframe(String name, int time, int x, int y, double width,
-      double height, int colorR, int colorG, int colorB);
+                      double height, int colorR, int colorG, int colorB);
 
   /**
    * Remove a motion from a list of motion for a given shape.
    *
-   * @param name  arbitary str name that user assigned to their shape upon initialization
+   * @param name  arbitrary str name that user assigned to their shape upon initialization
    * @param index the index of the motion the user wants to delete. This index needs to be either
    *              the first or the last motion in the list of motions
    * @throws IllegalArgumentException if the str name given by the user does not exist or null in
