@@ -139,7 +139,7 @@ public class AnimationModel implements IModel {
     if (index < 0 || index > frames.get(shape).size() - 1) {
       throw new IllegalArgumentException("Invalid frame index.");
     } else {
-      frames.get(name).remove(index);
+      frames.get(shape).remove(index);
     }
   }
 
@@ -150,8 +150,11 @@ public class AnimationModel implements IModel {
       throw new IllegalArgumentException("The name does not exist in current shapes.");
     }
     IShape shape = nameMap.get(name);
+
+    // If the shape does not have any Keyframes. Add a default 1.
     if (frames.get(shape).isEmpty()) {
-      throw new IllegalArgumentException("The shape does not have any frame.");
+      frames.get(shape).add(new Keyframe(time, new Position2D(0, 0), 0, 0,
+          new Color(0, 0, 0)));
     }
     if (time < 0) {
       throw new IllegalArgumentException("The time is invalid.");
@@ -162,19 +165,57 @@ public class AnimationModel implements IModel {
       Keyframe tmpFrame1 = new Keyframe(frames.get(shape).get(0));
       tmpFrame1.setTime(time);
       frames.get(shape).add(0, tmpFrame1);
-    } else if (time > endTime) {
+    }
+    else if (time > endTime) {
       Keyframe tmpFrame2 = new Keyframe(frames.get(shape).get(frames.get(shape).size() - 1));
       tmpFrame2.setTime(time);
       frames.get(shape).add(tmpFrame2);
     }
+
     if (hasKeyFrame(frames.get(shape), time)) {
       throw new IllegalArgumentException("The keyframe at this time already exist.");
-    } else {
+    }
+    else {
       insertFrame(shape.getShapeName(), frames.get(shape), time, name);
     }
     if (time > maxTick) {
       maxTick = time;
     }
+  }
+
+  /**
+   * Helper for insertKeyFrame().
+   * @param shape
+   * @param fs
+   * @param time
+   * @param name
+   */
+  private void insertFrame(String shape, List<Keyframe> fs, int time, String name) {
+    for (int i = 0; i < fs.size() - 1; i++) {
+      int time1 = fs.get(i).getTime();
+      int time2 = fs.get(i + 1).getTime();
+      if (time > time1 && time < time2) {
+        IShape newShape = buildShapeFromFrame(shape, fs, time, name);
+        Keyframe tmpKeyframe = new Keyframe(time, newShape.getPosition(),
+            newShape.getWidth(), newShape.getHeight(), newShape.getColor());
+        fs.add(i + 1, tmpKeyframe);
+      }
+    }
+  }
+
+  /**
+   * Helper for insertKeyframe() and modifyKeyframe(). Returns true if the given time exist in the
+   *  List of KeyFrame.
+   * @param keyframes a list of keyframes.
+   * @param time the time we want to find if exist.
+   * @return true if time exist in one of the keyframes.
+   */
+  private boolean hasKeyFrame(List<Keyframe> keyframes, int time) {
+    Set<Integer> times = new HashSet<>();
+    for (Keyframe kf : keyframes) {
+      times.add(kf.getTime());
+    }
+    return times.contains(time);
   }
 
   @Override
@@ -189,45 +230,26 @@ public class AnimationModel implements IModel {
     if (frames.get(shape).isEmpty()) {
       throw new IllegalArgumentException("The shape does not have any frame.");
     }
+
+    if (width <= 0 || height <= 0 || colorR < 0 || colorR > 255
+        || colorG < 0 || colorG > 255 || colorB < 0 || colorB > 255) {
+      throw new IllegalArgumentException("Invalid inputs,cannot modify the keyframe.");
+    }
+
     // Must be a valid time -- one of the times of all keyframes
     if (!hasKeyFrame(frames.get(shape), time)) {
       throw new IllegalArgumentException("The given time does not have a frame yet.");
-    } else {
+    }
+    else {
       for (Keyframe kf : frames.get(shape)) {
         if (kf.getTime() == time) {
-          if (width <= 0 || height <= 0 || colorR < 0 || colorR > 255
-              || colorG < 0 || colorG > 255 || colorB < 0 || colorB > 255) {
-            throw new IllegalArgumentException("Invalid inputs,cannot modify the keyframe.");
-          } else {
-            kf.setPosition(new Position2D(x, y));
-            kf.setWidth(width);
-            kf.setHeight(height);
-            kf.setColor(new Color(colorR, colorG, colorB));
-          }
+          kf.setPosition(new Position2D(x, y));
+          kf.setWidth(width);
+          kf.setHeight(height);
+          kf.setColor(new Color(colorR, colorG, colorB));
         }
       }
     }
-  }
-
-  private void insertFrame(String shape, List<Keyframe> fs, int time, String name) {
-    for (int i = 0; i < fs.size() - 1; i++) {
-      int time1 = fs.get(i).getTime();
-      int time2 = fs.get(i + 1).getTime();
-      if (time > time1 && time < time2) {
-        IShape newShape = buildShapeFromFrame(shape, fs, time, name);
-        Keyframe tmpKeyframe = new Keyframe(time, newShape.getPosition(),
-                newShape.getWidth(), newShape.getHeight(), newShape.getColor());
-        fs.add(i + 1, tmpKeyframe);
-      }
-    }
-  }
-
-  private boolean hasKeyFrame(List<Keyframe> keyframes, int time) {
-    Set times = new HashSet();
-    for (Keyframe kf : keyframes) {
-      times.add(kf.getTime());
-    }
-    return times.contains(time);
   }
 
   ///////////////////////////////////
@@ -328,93 +350,6 @@ public class AnimationModel implements IModel {
     return shapesAtTime;
   }
 
-  @Override
-  public List<IShape> getFrame(int time) {
-
-    List<IShape> shapesAtTime = new ArrayList<>();
-
-    //go through all shapes in map, add to shapeAtTime if we find a shape that have motion at the
-    //  exact time
-    for (Map.Entry<IShape, List<Keyframe>> mapPair : frames.entrySet()) {
-      IShape tmpShape = mapPair.getKey();
-      List<Keyframe> tmpFrame;
-
-      if (isTimeInFrames(mapPair.getValue(), time)) {
-        tmpFrame = findFrame(mapPair.getValue(), time);
-        shapesAtTime.add(buildShapeFromFrame(tmpShape.getShapeName(),
-                tmpFrame, time, tmpShape.getName()));
-      }
-    }
-    return shapesAtTime;
-  }
-
-  private IShape buildShapeFromFrame(String shape, List<Keyframe> tmpFrame,
-                                     int time, String name) {
-    //if the time has passed the ending time
-    Keyframe startFrame = tmpFrame.get(0);
-    Keyframe endFrame = tmpFrame.get(1);
-    if (time > endFrame.getTime() && time <= maxTick) {
-      return new Shape(endFrame.getColor(), endFrame.getPosition(), endFrame.getWidth(),
-              endFrame.getHeight(), name, DifferentShapes.valueOf(shape.toLowerCase()));
-    }
-    //if starttime the time given
-    else if (time == startFrame.getTime()) {
-      return new Shape(startFrame.getColor(), startFrame.getPosition(),
-              startFrame.getWidth(), startFrame.getHeight(), name,
-              DifferentShapes.valueOf(shape.toLowerCase()));
-    }
-    //else if the time has not passed ending time
-    else {
-      double ratio = (double) (time - startFrame.getTime())
-              / (endFrame.getTime() - startFrame.getTime());
-      Color color = new Color(
-              (int) (ratio * (endFrame.getColor().getRed() - startFrame.getColor().getRed())
-                      + startFrame.getColor().getRed()),
-              (int) (ratio * (endFrame.getColor().getGreen()
-                      - startFrame.getColor().getGreen())
-                      + startFrame.getColor().getGreen()),
-              (int) (ratio * (endFrame.getColor().getBlue()
-                      - startFrame.getColor().getBlue())
-                      + startFrame.getColor().getBlue()));
-      Position2D position = new Position2D(
-              ratio * (endFrame.getPosition().getX() - startFrame.getPosition().getX())
-                      + startFrame.getPosition().getX(),
-              ratio * (endFrame.getPosition().getY() - startFrame.getPosition().getY())
-                      + startFrame.getPosition().getY());
-      double width = ratio * (endFrame.getWidth() - startFrame.getWidth())
-              + startFrame.getWidth();
-      double height = ratio * (endFrame.getHeight() - startFrame.getHeight())
-              + startFrame.getHeight();
-
-      return new Shape(color, position, width, height, name,
-              DifferentShapes.valueOf(shape.toLowerCase()));
-    }
-  }
-
-  private List<Keyframe> findFrame(List<Keyframe> fs, int time) {
-    List<Keyframe> kfs = new ArrayList<>();
-    for (int i = 0; i < fs.size() - 1; i++) {
-      int time1 = fs.get(i).getTime();
-      int time2 = fs.get(i + 1).getTime();
-
-      if (i == fs.size() - 2 && time > time2) {
-        kfs.add(fs.get(i));
-        kfs.add(fs.get(i + 1));
-      }
-      else if (time >= time1 && time <= time2) {
-        kfs.add(fs.get(i));
-        kfs.add(fs.get(i + 1));
-      }
-    }
-    return kfs;
-  }
-
-  private boolean isTimeInFrames(List<Keyframe> fs, int time) {
-    int startTime = fs.get(0).getTime();
-    return (time >= startTime && time <= maxTick);
-  }
-
-
   /**
    * Helper for getAnimation(). Checks the list of motion to see if the given time exist within the
    * time range of that list of motion.
@@ -466,36 +401,123 @@ public class AnimationModel implements IModel {
     //if the time has passed the ending time
     if (time > tmpMotion.getEndTime() && time <= maxTick) {
       return new Shape(tmpMotion.getEndColor(), tmpMotion.getEndPosition(), tmpMotion.getEndWidth(),
-              tmpMotion.getEndHeight(), name, DifferentShapes.valueOf(shape.toLowerCase()));
+          tmpMotion.getEndHeight(), name, DifferentShapes.valueOf(shape.toLowerCase()));
     }
     //if starttime the time given
     else if (time == tmpMotion.getStartTime()) {
       return new Shape(tmpMotion.getStartColor(), tmpMotion.getStartPosition(),
-              tmpMotion.getStartWidth(), tmpMotion.getStartHeight(), name,
-              DifferentShapes.valueOf(shape.toLowerCase()));
+          tmpMotion.getStartWidth(), tmpMotion.getStartHeight(), name,
+          DifferentShapes.valueOf(shape.toLowerCase()));
     }
     //else if the time has not passed ending time
     else {
       double ratio = (double) (time - tmpMotion.getStartTime())
-              / (tmpMotion.getEndTime() - tmpMotion.getStartTime());
+          / (tmpMotion.getEndTime() - tmpMotion.getStartTime());
       Color color = new Color(
-              (int) (ratio * (tmpMotion.getEndColor().getRed() - tmpMotion.getStartColor().getRed())
-                      + tmpMotion.getStartColor().getRed()),
-              (int) (ratio * (tmpMotion.getEndColor().getGreen()
-                      - tmpMotion.getStartColor().getGreen())
-                      + tmpMotion.getStartColor().getGreen()),
-              (int) (ratio * (tmpMotion.getEndColor().getBlue()
-                      - tmpMotion.getStartColor().getBlue())
-                      + tmpMotion.getStartColor().getBlue()));
+          (int) (ratio * (tmpMotion.getEndColor().getRed() - tmpMotion.getStartColor().getRed())
+              + tmpMotion.getStartColor().getRed()),
+          (int) (ratio * (tmpMotion.getEndColor().getGreen()
+              - tmpMotion.getStartColor().getGreen())
+              + tmpMotion.getStartColor().getGreen()),
+          (int) (ratio * (tmpMotion.getEndColor().getBlue()
+              - tmpMotion.getStartColor().getBlue())
+              + tmpMotion.getStartColor().getBlue()));
       Position2D position = new Position2D(
-              ratio * (tmpMotion.getEndPosition().getX() - tmpMotion.getStartPosition().getX())
-                      + tmpMotion.getStartPosition().getX(),
-              ratio * (tmpMotion.getEndPosition().getY() - tmpMotion.getStartPosition().getY())
-                      + tmpMotion.getStartPosition().getY());
+          ratio * (tmpMotion.getEndPosition().getX() - tmpMotion.getStartPosition().getX())
+              + tmpMotion.getStartPosition().getX(),
+          ratio * (tmpMotion.getEndPosition().getY() - tmpMotion.getStartPosition().getY())
+              + tmpMotion.getStartPosition().getY());
       double width = ratio * (tmpMotion.getEndWidth() - tmpMotion.getStartWidth())
-              + tmpMotion.getStartWidth();
+          + tmpMotion.getStartWidth();
       double height = ratio * (tmpMotion.getEndHeight() - tmpMotion.getStartHeight())
-              + tmpMotion.getStartHeight();
+          + tmpMotion.getStartHeight();
+
+      return new Shape(color, position, width, height, name,
+          DifferentShapes.valueOf(shape.toLowerCase()));
+    }
+  }
+
+
+  @Override
+  public List<IShape> getFrame(int time) {
+
+    List<IShape> shapesAtTime = new ArrayList<>();
+
+    //go through all shapes in map, add to shapeAtTime if we find a shape that have motion at the
+    //  exact time
+    for (Map.Entry<IShape, List<Keyframe>> mapPair : frames.entrySet()) {
+      IShape tmpShape = mapPair.getKey();
+      List<Keyframe> tmpFrame;
+
+      if (isTimeInFrames(mapPair.getValue(), time)) {
+        tmpFrame = findFrame(mapPair.getValue(), time);
+        shapesAtTime.add(buildShapeFromFrame(tmpShape.getShapeName(),
+                tmpFrame, time, tmpShape.getName()));
+      }
+    }
+    return shapesAtTime;
+  }
+
+  private boolean isTimeInFrames(List<Keyframe> fs, int time) {
+    int startTime = fs.get(0).getTime();
+    return (time >= startTime && time <= maxTick);
+  }
+
+  private List<Keyframe> findFrame(List<Keyframe> fs, int time) {
+    List<Keyframe> kfs = new ArrayList<>();
+    for (int i = 0; i < fs.size() - 1; i++) {
+      int time1 = fs.get(i).getTime();
+      int time2 = fs.get(i + 1).getTime();
+
+      if (i == fs.size() - 2 && time > time2) {
+        kfs.add(fs.get(i));
+        kfs.add(fs.get(i + 1));
+      }
+      else if (time >= time1 && time <= time2) {
+        kfs.add(fs.get(i));
+        kfs.add(fs.get(i + 1));
+      }
+    }
+    return kfs;
+  }
+
+  private IShape buildShapeFromFrame(String shape, List<Keyframe> tmpFrame,
+                                     int time, String name) {
+    //if the time has passed the ending time
+    Keyframe startFrame = tmpFrame.get(0);
+    Keyframe endFrame = tmpFrame.get(1);
+    if (time > endFrame.getTime() && time <= maxTick) {
+      return new Shape(endFrame.getColor(), endFrame.getPosition(), endFrame.getWidth(),
+              endFrame.getHeight(), name, DifferentShapes.valueOf(shape.toLowerCase()));
+    }
+    //if starttime the time given
+    else if (time == startFrame.getTime()) {
+      return new Shape(startFrame.getColor(), startFrame.getPosition(),
+              startFrame.getWidth(), startFrame.getHeight(), name,
+              DifferentShapes.valueOf(shape.toLowerCase()));
+    }
+    //else if the time has not passed ending time
+    else {
+      double ratio = (double) (time - startFrame.getTime())
+              / (endFrame.getTime() - startFrame.getTime());
+      Color color = new Color(
+              (int) (ratio * (endFrame.getColor().getRed() - startFrame.getColor().getRed())
+                      + startFrame.getColor().getRed()),
+              (int) (ratio * (endFrame.getColor().getGreen()
+                      - startFrame.getColor().getGreen())
+                      + startFrame.getColor().getGreen()),
+              (int) (ratio * (endFrame.getColor().getBlue()
+                      - startFrame.getColor().getBlue())
+                      + startFrame.getColor().getBlue()));
+      Position2D position = new Position2D(
+              ratio * (endFrame.getPosition().getX() - startFrame.getPosition().getX())
+                      + startFrame.getPosition().getX(),
+              ratio * (endFrame.getPosition().getY() - startFrame.getPosition().getY())
+                      + startFrame.getPosition().getY());
+      double width = ratio * (endFrame.getWidth() - startFrame.getWidth())
+              + startFrame.getWidth();
+      double height = ratio * (endFrame.getHeight() - startFrame.getHeight())
+              + startFrame.getHeight();
 
       return new Shape(color, position, width, height, name,
               DifferentShapes.valueOf(shape.toLowerCase()));
@@ -540,6 +562,11 @@ public class AnimationModel implements IModel {
       }
     }
     return tmpMax;
+  }
+
+  @Override
+  public int returnMaxTick() {
+    return this.maxTick;
   }
 
   @Override

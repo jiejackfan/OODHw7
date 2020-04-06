@@ -42,11 +42,11 @@ public class AnimationController implements IController, ActionListener {
   ActionListener taskPerformer = new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
-      if (m.getCurrentTick() < m.getMaxTick()) {
+      if (m.getCurrentTick() < m.returnMaxTick()) {
         currentTick = currentTick + 1;
         m.setTick(currentTick);
       }
-      else if (m.getCurrentTick() == m.getMaxTick()) {
+      else if (m.getCurrentTick() == m.returnMaxTick()) {
         //if (v instanceof EditView) {
           if (((EditView) v).getCheckState()) {
             currentTick = 0;

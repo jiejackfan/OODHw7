@@ -59,6 +59,8 @@ public interface ReadOnlyModel {
    */
   int getMaxTick();
 
+  int returnMaxTick();
+
   /**
    * Getter function to get the x coordinate of the canvas.
    *

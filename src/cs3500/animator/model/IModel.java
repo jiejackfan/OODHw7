@@ -34,7 +34,7 @@ public interface IModel extends ReadOnlyModel {
   void removeShape(String name);
 
   /**
-   * This function will add one motion (transition of attributes of a shape from a time to another)
+   * This function will add one  motion (transition of attributes of a shape from a time to another)
    * into a list of motions to a corresponding shape.
    *
    * @param name        This is the custom name of the shape that user wants to add the motion to

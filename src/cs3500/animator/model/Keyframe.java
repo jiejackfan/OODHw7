@@ -43,7 +43,7 @@ public class Keyframe {
       throw new IllegalArgumentException("Invalid time.");
     }
     // Check whether the given sizes are valid.
-    if (width <= 0 || height <= 0) {
+    if (width == 0 || height == 0) {
       throw new IllegalArgumentException("The size must be positive.");
     }
 
