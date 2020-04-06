@@ -150,15 +150,27 @@ public class AnimationModel implements IModel {
       throw new IllegalArgumentException("The name does not exist in current shapes.");
     }
     IShape shape = nameMap.get(name);
-
-    // If the shape does not have any Keyframes. Add a default 1.
-    if (frames.get(shape).isEmpty()) {
-      frames.get(shape).add(new Keyframe(time, new Position2D(0, 0), 0, 0,
-          new Color(0, 0, 0)));
-    }
     if (time < 0) {
       throw new IllegalArgumentException("The time is invalid.");
     }
+    if (hasKeyFrame(frames.get(shape), time)) {
+      throw new IllegalArgumentException("The keyframe at this time already exist.");
+    }
+
+    // If the shape does not have any Keyframes. Add a default frame with all parameters set to 0.
+    if (frames.get(shape).isEmpty()) {
+      frames.get(shape).add(new Keyframe(time, new Position2D(0, 0), 0, 0,
+          new Color(0, 0, 0)));
+      return;
+    }
+
+    // If the shape have 1 keyframe, add a default frame again
+    if (frames.get(shape).size() == 1) {
+      frames.get(shape).add(new Keyframe(time, new Position2D(0, 0), 0, 0,
+          new Color(0, 0, 0)));
+      return;
+    }
+
     int startTime = frames.get(shape).get(0).getTime();
     int endTime = frames.get(shape).get(frames.get(shape).size() - 1).getTime();
     if (time < startTime) {
@@ -172,12 +184,8 @@ public class AnimationModel implements IModel {
       frames.get(shape).add(tmpFrame2);
     }
 
-    if (hasKeyFrame(frames.get(shape), time)) {
-      throw new IllegalArgumentException("The keyframe at this time already exist.");
-    }
-    else {
-      insertFrame(shape.getShapeName(), frames.get(shape), time, name);
-    }
+    insertFrame(shape.getShapeName(), frames.get(shape), time, name);
+
     if (time > maxTick) {
       maxTick = time;
     }

@@ -182,7 +182,7 @@ public class AnimationController implements IController, ActionListener {
           int tmpInt = Integer.parseInt(tmp3.get(1));
           m.deleteKeyframe(tmp3.get(0), tmpInt);
         } catch (NumberFormatException nfe) {
-          v.showErrorMsg("You must enter an int for time");
+          v.showErrorMsg("You must enter an int for index");
         } catch (IllegalArgumentException iae){
           v.showErrorMsg(iae.getMessage());
         }
@@ -192,15 +192,7 @@ public class AnimationController implements IController, ActionListener {
         try {
           m.createShape(tmp.get(0), tmp.get(1));
         } catch (IllegalArgumentException iae){
-          if (iae.getMessage().equals("The name cannot be null or empty.")) {
-            v.showErrorMsg("Did not enter a valid shape name");
-          }
-          if (iae.getMessage().equals("Invalid shape input.")) {
-            v.showErrorMsg("Did not enter a valid shape type");
-          }
-          if (iae.getMessage().equals("Shape exists, can't add again.")) {
-            v.showErrorMsg("Shape exists, don't add again");
-          }
+          v.showErrorMsg(iae.getMessage());
         }
         break;
       case "Delete Shape":
@@ -208,9 +200,7 @@ public class AnimationController implements IController, ActionListener {
         try {
           m.removeShape(tmp1.get(1));
         } catch (IllegalArgumentException iae){
-          if (iae.getMessage().equals("The given shape is not in the animation.")) {
-            v.showErrorMsg("Did not enter a valid shape name");
-          }
+          v.showErrorMsg(iae.getMessage());
         }
         break;
       default:
@@ -218,7 +208,4 @@ public class AnimationController implements IController, ActionListener {
         break;
     }
   }
-
-
-
 }
