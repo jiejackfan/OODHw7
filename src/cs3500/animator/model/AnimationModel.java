@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.plaf.ColorUIResource;
+
 /**
  * The animation model implementation. It will implement all methods declared in IModel and
  * ReadOnlyModel. This model will be the main storage of the animation. It will store shapes and
@@ -100,6 +102,8 @@ public class AnimationModel implements IModel {
                     new Color(startColorR, startColorG, startColorB), endTime,
                     new Position2D(endX, endY), endWidth, endHeight,
                     new Color(endColorR, endColorG, endColorB)));
+    frames.get(nameMap.get(name)).add(new Keyframe(endTime, new Position2D(endX, endY), endWidth,
+            endHeight, new Color(endColorR, endColorG, endColorB)));
   }
 
   @Override
@@ -136,12 +140,25 @@ public class AnimationModel implements IModel {
     if (index < 0 || index > frames.get(shape).size() - 1) {
       throw new IllegalArgumentException("Invalid frame index.");
     } else {
+      // Also, make the corresponding changes to the motions
+      if (index == 0 || index == frames.get(shape).size() - 1) {
+        removeMotion(name, index);
+      } else {
+        Keyframe kf = frames.get(shape).get(index - 1);
+        animation.get(nameMap.get(name)).get(index + 1).changeMotionStart(kf.getPosition(),
+                kf.getWidth(), kf.getHeight(), kf.getColor());
+        animation.get(nameMap.get(name)).get(index + 1).changeStartTime(kf.getTime());
+        animation.get(shape).remove(index);
+      }
       frames.get(shape).remove(index);
     }
   }
 
   @Override
   public void insertKeyframe(String name, int time) {
+    if (time < 0) {
+      throw new IllegalArgumentException("The time is invalid.");
+    }
     if (name == null || name.equals("") || !nameMap.containsKey(name)) {
       throw new IllegalArgumentException("The name does not exist in current shapes.");
     }
@@ -156,34 +173,60 @@ public class AnimationModel implements IModel {
     if (frames.get(shape).isEmpty()) {
       frames.get(shape).add(new Keyframe(time, new Position2D(0, 0), 0, 0,
               new Color(0, 0, 0)));
+      addMotion(name, time, 0, 0, 0, 0, 0,
+              0, 0, time, 0, 0, 0, 0,
+              0, 0, 0);
       return;
     }
-    // If the shape have 1 keyframe, add a default frame again
-    if (frames.get(shape).size() == 1) {
-      frames.get(shape).add(new Keyframe(time, new Position2D(0, 0), 0, 0,
-              new Color(0, 0, 0)));
-      return;
-    }
-
+    // If the shape has 1 keyframe
+//    if (frames.get(shape).size() == 1) {
+//      if (hasKeyFrame(frames.get(shape), time)) {
+//        throw new IllegalArgumentException("This keyframe already exists.");
+//      } else {
+//        frames.get(shape).add(frames.get(shape).get(0));
+//        frames.get(shape).get(1).setTime(time);
+//        if (time < frames.get(shape).get(0).getTime()) {
+//          tmpMotion.changeStartTime(time);
+//          animation.get(shape).add(0,tmpMotion);
+//        } else if (time > frames.get(shape).get(0).getTime()) {
+//          tmpMotion.changeEndTime(time);
+//          animation.get(shape).add(tmpMotion);
+//        }
+//        return;
+//      }
+//    }
     int startTime = frames.get(shape).get(0).getTime();
     int endTime = frames.get(shape).get(frames.get(shape).size() - 1).getTime();
+
     if (time < startTime) {
       Keyframe tmpFrame1 = new Keyframe(frames.get(shape).get(0));
       tmpFrame1.setTime(time);
       frames.get(shape).add(0, tmpFrame1);
+      // Make according changes to motions
+      Motion tmpMotion = new Motion(animation.get(shape).get(0));
+      tmpMotion.changeStartTime(time);
+      tmpMotion.changeEndTime(time);
+      animation.get(shape).get(0).changeStartTime(time);
+      animation.get(shape).add(0, tmpMotion);
     } else if (time > endTime) {
       Keyframe tmpFrame2 = new Keyframe(frames.get(shape).get(frames.get(shape).size() - 1));
       tmpFrame2.setTime(time);
       frames.get(shape).add(tmpFrame2);
+      // Make according changes to motions
+      Motion tmpMotion = new Motion(animation.get(shape).get(animation.get(shape).size() - 1));
+      tmpMotion.changeStartTime(tmpMotion.getEndTime());
+      tmpMotion.changeEndTime(time);
+      animation.get(shape).add(tmpMotion);
     }
     insertFrame(shape.getShapeName(), frames.get(shape), time, name);
+    animation.get(shape).sort(new SortByStartTime());
     if (time > maxTick) {
       maxTick = time;
     }
   }
 
   /**
-   * Helper for insertKeyFrame().
+   * Helper for insertKeyFrame(). /////////////////////////
    *
    * @param shape the actual shape name
    * @param fs    list of keyframes
@@ -199,9 +242,39 @@ public class AnimationModel implements IModel {
         Keyframe tmpKeyframe = new Keyframe(time, newShape.getPosition(),
                 newShape.getWidth(), newShape.getHeight(), newShape.getColor());
         fs.add(i + 1, tmpKeyframe);
+        // Make according insertion to motions of the given shape
+        Motion tmpMotion = findActualMotion(animation.get(nameMap.get(name)), time);
+        Motion copyMotion = new Motion(tmpMotion);
+        copyMotion.changeMotionEnd(newShape.getPosition(),
+                newShape.getWidth(), newShape.getHeight(), newShape.getColor());
+        copyMotion.changeEndTime(time);
+        tmpMotion.changeMotionStart(newShape.getPosition(),
+                newShape.getWidth(), newShape.getHeight(), newShape.getColor());
+        tmpMotion.changeStartTime(time);
+        animation.get(nameMap.get(name)).add(copyMotion);
       }
     }
+
   }
+
+  /**
+   * Find and return the motion that has the given time in a list of motions.
+   *
+   * @param listOfMotion we want to find the motion in.
+   * @param time         the time of the motion we want to find.
+   * @return the motion (the actual object) that contains the time.
+   */
+  private Motion findActualMotion(List<Motion> listOfMotion, int time) {
+    for (Motion tmpMotion : listOfMotion) {
+      int startTime = tmpMotion.getStartTime();
+      int endTime = tmpMotion.getEndTime();
+      if (time >= startTime && time <= endTime) {
+        return tmpMotion;
+      }
+    }
+    return listOfMotion.get(listOfMotion.size() - 1);
+  }
+
 
   /**
    * Helper for insertKeyframe() and modifyKeyframe(). Returns true if the given time exist in the
@@ -246,8 +319,36 @@ public class AnimationModel implements IModel {
           kf.setHeight(height);
           kf.setColor(new Color(colorR, colorG, colorB));
         }
+        // Make according changes to the motions
+        // Change the last keyframe
+        if (time == frames.get(shape).get(frames.get(shape).size() - 1).getTime()) {
+          Motion tmpMotion = findActualMotion(animation.get(shape), time);
+          tmpMotion.changeMotionEnd(new Position2D(x, y),
+                  width, height, new Color(colorR, colorG, colorB));
+        } else { // Change one of the rest keyframes
+          List<Motion> listMotions = findMotions(animation.get(shape), time);
+          if (time == frames.get(shape).get(0).getTime()) {
+            listMotions.get(0).changeMotionStart(new Position2D(x, y),
+                    width, height, new Color(colorR, colorG, colorB));
+          }
+          listMotions.get(0).changeMotionEnd(new Position2D(x, y),
+                  width, height, new Color(colorR, colorG, colorB));
+          listMotions.get(1).changeMotionStart(new Position2D(x, y),
+                  width, height, new Color(colorR, colorG, colorB));
+        }
       }
     }
+  }
+
+  private List<Motion> findMotions(List<Motion> motions, int time) {
+    List<Motion> listMotions = new ArrayList<>();
+    for (int i = 0; i < motions.size() - 1; i++) {
+      if (motions.get(i).getEndTime() == time) {
+        listMotions.add(motions.get(i));
+        listMotions.add(motions.get(i + 1));
+      }
+    }
+    return listMotions;
   }
 
   ///////////////////////////////////
@@ -260,7 +361,7 @@ public class AnimationModel implements IModel {
     }
     for (Map.Entry<String, IShape> mapPair : nameMap.entrySet()) {
       String name = (String) mapPair.getKey();
-      output = output + "shape " + name + " " + nameMap.get(name).getShapeName() + "\n";
+      output = output + "Shape " + name + " " + nameMap.get(name).getShapeName() + "\n";
       output = output + listOfMotionsToString(name, animation.get(nameMap.get(name)));
     }
     return output;
@@ -276,13 +377,11 @@ public class AnimationModel implements IModel {
    * @throws IllegalArgumentException if there is a teleporation.
    */
   private String listOfMotionsToString(String name, List<Motion> listOfMotion) {
-    //listOfMotion.sort(new SortByStartTime());
-    /*
-    if (!checkValidAnimation(listOfMotion)) {
-      throw new IllegalStateException("There is teleportation or overlap in this shape, this "
-              + "shape will be deleted.");
-    }
-    */
+    listOfMotion.sort(new SortByStartTime());
+//    if (!checkValidAnimation(listOfMotion)) {
+//      throw new IllegalStateException("There is teleportation or overlap in this shape, this "
+//              + "shape will be deleted.");
+//    }
     String result = "";
     for (Motion m : listOfMotion) {
       result = result + "motion " + name + " " + m.toString() + "\n";
@@ -359,11 +458,11 @@ public class AnimationModel implements IModel {
   }
 
   /**
-   * Find and return a copyt of the motion that has the given time in a list of motions.
+   * Find and return a copy of the motion that has the given time in a list of motions.
    *
    * @param listOfMotion we want to find the motion in.
    * @param time         the time of the motion we want to find.
-   * @return the motion that contains the time.
+   * @return the motion (a copy) that contains the time.
    */
   private Motion findMotion(List<Motion> listOfMotion, int time) {
     for (Motion tmpMotion : listOfMotion) {
@@ -375,6 +474,7 @@ public class AnimationModel implements IModel {
     }
     return new Motion(listOfMotion.get(listOfMotion.size() - 1));
   }
+
 
   /**
    * Helper for getAnimation(). Builds a copy of a particular shape that contains the color,
@@ -426,7 +526,6 @@ public class AnimationModel implements IModel {
               DifferentShapes.valueOf(shape.toLowerCase()));
     }
   }
-
 
   @Override
   public List<IShape> getFrame(int time) {
@@ -542,14 +641,12 @@ public class AnimationModel implements IModel {
       throw new IllegalArgumentException("The shape you want to remove does not exist.");
     }
     IShape tmpShape = nameMap.get(name);
-
     // Check if the index of the shape you want to remove is either the first or the last. If the
     //  index is not first or last, throw illegal argument.
     if (index != 0 && index != (animation.get(tmpShape).size() - 1)) {
       throw new IllegalArgumentException("The motion is not the first or the last in the list, "
               + "can't be remove as of right now.");
     }
-
     List<Motion> tmpListOfMotion = animation.get(tmpShape);
     tmpListOfMotion.remove(index);
   }

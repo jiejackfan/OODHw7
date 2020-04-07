@@ -58,7 +58,7 @@ public class Motion {
       throw new IllegalArgumentException("Start time cannot be greater than the end time.");
     }
     // Check whether the given sizes are valid.
-    if (startWidth <= 0 || startHeight <= 0 || endWidth <= 0 || endHeight <= 0) {
+    if (startWidth < 0 || startHeight < 0 || endWidth < 0 || endHeight < 0) {
       throw new IllegalArgumentException("The size must be positive.");
     }
 
@@ -207,21 +207,106 @@ public class Motion {
   }
 
   /**
-   * Function to change start time. Not used currently in our implementation.
+   * Function to change start time.
    *
-   * @param time the user wants to change as the new start time.
+   * @param time the user wants to change as the new start time
    */
   public void changeStartTime(int time) {
     this.startTime = time;
   }
 
   /**
-   * Function to change end time. Not used currently in our implementation.
+   * Function to change end time.
    *
-   * @param time the user wants to change as the new end time.
+   * @param time the user wants to change as the new end time
    */
   public void changeEndTime(int time) {
     this.endTime = time;
   }
 
+  /**
+   * Function to change start position.
+   *
+   * @param startPosition the user wants to change as the new start position
+   */
+  public void changeStartPosition(Position2D startPosition) {
+    this.startPosition = startPosition;
+  }
+
+  /**
+   * Function to change end position.
+   *
+   * @param endPosition the user wants to change as the new end position
+   */
+  public void changeEndPosition(Position2D endPosition) {
+    this.endPosition = endPosition;
+  }
+
+  /**
+   * Function to change start width.
+   *
+   * @param startWidth the user wants to change as the new start width
+   */
+  public void changeStartWidth(double startWidth) {
+    this.startWidth = startWidth;
+  }
+
+  /**
+   * Function to change end width.
+   *
+   * @param endWidth the user wants to change as the new end width
+   */
+  public void changeEndWidth(double endWidth) {
+    this.endWidth = endWidth;
+  }
+
+  /**
+   * Function to change start height.
+   *
+   * @param startHeight the user wants to change as the new start height
+   */
+  public void changeStartHeight(double startHeight) {
+    this.startHeight = startHeight;
+  }
+
+  /**
+   * Function to change end height.
+   *
+   * @param endHeight the user wants to change as the new end height
+   */
+  public void changeEndHeight(double endHeight) {
+    this.endHeight = endHeight;
+  }
+
+  /**
+   * Function to change start color.
+   *
+   * @param startColor the user wants to change as the new start color
+   */
+  public void changeStartColor(Color startColor) {
+    this.startColor = startColor;
+  }
+
+  /**
+   * Function to change end position.
+   *
+   * @param endColor the user wants to change as the new end position
+   */
+  public void changeEndColor(Color endColor) {
+    this.endColor = endColor;
+  }
+
+  public void changeMotionStart(Position2D position, double width, double height, Color color) {
+    this.startPosition = position;
+    this.startWidth = width;
+    this.startHeight = height;
+    this.startColor = color;
+  }
+
+  public void changeMotionEnd(Position2D position, double width, double height, Color color) {
+    this.endPosition = position;
+    this.endWidth = width;
+    this.endHeight = height;
+    this.endColor = color;
+  }
 }

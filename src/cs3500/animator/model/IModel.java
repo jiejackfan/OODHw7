@@ -10,9 +10,11 @@ import java.awt.*;
 public interface IModel extends ReadOnlyModel {
 
   ////////////////////////////////////
+
   /**
    * This function will create a shape (out of rectangle, oval right now). User will store this
-   * shape into two map data structures that will be used to represent the entire animation.
+   * shape into two map data structures (for both motions and keyframes) that will be used to
+   * represent the entire animation.
    *
    * @param shape This is a string that represents the shape user wants to create. This can be one
    *              of "rectangle", "oval"
@@ -23,7 +25,7 @@ public interface IModel extends ReadOnlyModel {
   void createShape(String shape, String name);
 
   /**
-   * Removes a shape and its corresponding list of motions from the animation.
+   * Removes a shape and its corresponding list of motions and keyframes from the animation.
    *
    * @param name User can delete a shape by passing in the custom name that was assigned in the
    *             beginning
@@ -67,6 +69,19 @@ public interface IModel extends ReadOnlyModel {
                  int endTime, int endX, double endY, double endWidth,
                  double endHeight, int endColorR,
                  int endColorG, int endColorB);
+
+  /**
+   * Remove a motion from a list of motion for a given shape.
+   *
+   * @param name  arbitrary str name that user assigned to their shape upon initialization
+   * @param index the index of the motion the user wants to delete. This index needs to be either
+   *              the first or the last motion in the list of motions
+   * @throws IllegalArgumentException if the str name given by the user does not exist or null in
+   *                                  current animation
+   * @throws IllegalArgumentException if the index given by the user is not the first or the last
+   *                                  motion in a list of motions
+   */
+  void removeMotion(String name, int index);
 
   /**
    * This function will add one keyframe (a state of a shape at a time) into a list of keyframes to
@@ -141,19 +156,6 @@ public interface IModel extends ReadOnlyModel {
                       double height, int colorR, int colorG, int colorB);
 
   /**
-   * Remove a motion from a list of motion for a given shape.
-   *
-   * @param name  arbitrary str name that user assigned to their shape upon initialization
-   * @param index the index of the motion the user wants to delete. This index needs to be either
-   *              the first or the last motion in the list of motions
-   * @throws IllegalArgumentException if the str name given by the user does not exist or null in
-   *                                  current animation
-   * @throws IllegalArgumentException if the index given by the user is not the first or the last
-   *                                  motion in a list of motions
-   */
-  void removeMotion(String name, int index);
-
-  /**
    * Allow the controller to set the current tick of the system.
    *
    * @param newTick give the new tick that we want to assign to the model
@@ -176,6 +178,5 @@ public interface IModel extends ReadOnlyModel {
    * @param h height of the canvas
    */
   void setCanvas(int x, int y, int w, int h);
-
 
 }
