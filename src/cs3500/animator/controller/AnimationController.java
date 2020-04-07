@@ -1,6 +1,8 @@
 package cs3500.animator.controller;
 
+import cs3500.animator.model.AnimationModel;
 import cs3500.animator.model.IModel;
+import cs3500.animator.util.AnimationReader;
 import cs3500.animator.view.EditView;
 import cs3500.animator.view.IEditView;
 import cs3500.animator.view.IView;
@@ -12,6 +14,11 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,7 +75,7 @@ public class AnimationController implements IController, ActionListener {
   public AnimationController(IView v, IModel m) {
     this.v = v;
     this.m = m;
-    v.addActionListener(this);
+    if (v instanceof EditView) ((EditView)v).addActionListener(this);
   }
 
   @Override
@@ -130,6 +137,30 @@ public class AnimationController implements IController, ActionListener {
         timer.setDelay(newDelay2);
         break;
       case "Repeat Box":
+        break;
+      case "Load Button":
+        File loadLocation = v.getLoadLocation();
+        Readable inputFileContent = null;
+        try {
+          inputFileContent = new StringReader(
+              new String(Files.readAllBytes(Paths.get(loadLocation.getAbsolutePath()))));
+        } catch (IOException ex) {
+          ex.printStackTrace();
+        }
+        this.m = AnimationReader.parseFile(inputFileContent, new AnimationModel.Builder());
+        //reset time and animation here....
+        break;
+      case "Save SVG Button":
+        File saveLocation = v.getSaveLocation();
+        System.out.println(saveLocation.getAbsolutePath());
+        IView svgView = new SVGView(m, 0, 0, 0, 0);
+        svgView.setOutputFileName(saveLocation.getAbsolutePath() + "out.svg");
+        svgView.setDelay(DELAY);
+        IController newController = new AnimationController(svgView, m);
+        newController.playAnimation();
+        break;
+      case "Save Text Button":
+
         break;
       case "Modify Keyframe":
         List<String> tmp4 = v.getEditPanelInput();

@@ -5,23 +5,28 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class EditView extends JFrame implements IEditView {
 
   //variable for contorl panel
   protected JButton playButton, resumeButton, restartButton, speedUpButton, slowDownButton;
+  protected JButton loadButton, saveSVGButton, saveTextButton;
+  protected JFileChooser loadWindow, saveSVGWindow, saveTextWindow;
+  protected JLabel loadLabel, saveLabel;
   protected JCheckBox repeatBox;
 
   //variable for all panels in the frame
@@ -76,6 +81,19 @@ public class EditView extends JFrame implements IEditView {
     repeatBox = new JCheckBox("repeat");
     repeatBox.setActionCommand("Repeat Box");
     controlPanel.add(repeatBox);
+    loadButton = new JButton("Load File");
+    loadButton.setActionCommand("Load Button");
+    controlPanel.add(loadButton);
+    loadLabel = new JLabel("Load a file^^^");
+    controlPanel.add(loadLabel);
+    saveSVGButton = new JButton("Save as SVG");
+    saveSVGButton.setActionCommand("Save SVG Button");
+    controlPanel.add(saveSVGButton);
+    saveTextButton = new JButton("Save as Txt");
+    saveTextButton.setActionCommand("Save Text Button");
+    controlPanel.add(saveTextButton);
+    saveLabel = new JLabel("Save a file^^^");
+    controlPanel.add(saveLabel);
     p.add(controlPanel);
 
     editPanel = new JPanel();
@@ -200,6 +218,9 @@ public class EditView extends JFrame implements IEditView {
     insertShapeButton.addActionListener(actionListener);
     deleteShapeButton.addActionListener(actionListener);
     modifyKeyframeButton.addActionListener(actionListener);
+    loadButton.addActionListener(actionListener);
+    saveSVGButton.addActionListener(actionListener);
+    saveTextButton.addActionListener(actionListener);
   }
 
   @Override
@@ -245,4 +266,37 @@ public class EditView extends JFrame implements IEditView {
     JOptionPane.showMessageDialog(new JFrame(), string, "Dialog",
         JOptionPane.WARNING_MESSAGE);
   }
+
+  @Override
+  public File getLoadLocation() {
+    loadWindow = new JFileChooser("c:");
+    loadWindow.addChoosableFileFilter(new FileNameExtensionFilter("Only .txt files",
+        "txt"));
+    int r = loadWindow.showOpenDialog(null);
+    if (r == JFileChooser.APPROVE_OPTION) {
+      loadLabel.setText("Loaded: " + loadWindow.getSelectedFile().getName());
+      return loadWindow.getSelectedFile();
+    }
+    else {
+      loadLabel.setText("Load a file^^^");
+    }
+    return null;
+  }
+
+  @Override
+  public File getSaveLocation() {
+    saveSVGWindow = new JFileChooser("c:");
+    saveSVGWindow.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    int r = saveSVGWindow.showOpenDialog(null);
+    if (r == JFileChooser.APPROVE_OPTION) {
+      saveLabel.setText("Saved to selected dir.");
+      return saveSVGWindow.getSelectedFile();
+    }
+    else {
+      saveLabel.setText("Save a file^^^");
+    }
+    return null;
+  }
+
+
 }

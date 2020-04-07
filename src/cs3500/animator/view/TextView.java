@@ -69,8 +69,4 @@ public class TextView implements IView {
     // do nothing
   }
 
-  @Override
-  public void addActionListener(ActionListener listener) {
-
-  }
 }

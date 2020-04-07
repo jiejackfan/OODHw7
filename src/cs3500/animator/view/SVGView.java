@@ -22,6 +22,7 @@ public class SVGView implements IView {
   private String outputFileName;
   private final ReadOnlyModel readOnlyModel;
   private double delay;
+  private File saveToLocation = null;
 
   /**
    * Initializing constructor for the SVG view class. Takes in the readonly model for shape
@@ -188,8 +189,4 @@ public class SVGView implements IView {
     this.delay = delay;
   }
 
-  @Override
-  public void addActionListener(ActionListener listener) {
-
-  }
 }

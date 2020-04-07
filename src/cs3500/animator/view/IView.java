@@ -40,17 +40,6 @@ public interface IView {
    */
   void setDelay(int delay);
 
-  /**
-   * this is to force the view to have a method to set up actions for buttons.
-   * All the buttons must be given this action listener
-   * <p>
-   * Thus our Swing-based implementation of this interface will already have such a
-   * method.
-   *
-   * @param listener
-   */
-
-  void addActionListener(ActionListener listener);
 
 
 

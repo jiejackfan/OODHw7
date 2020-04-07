@@ -60,10 +60,4 @@ public class SwingView extends JFrame implements IView {
   public void setDelay(int delay) {
     throw new UnsupportedOperationException("This is not supported");
   }
-
-  @Override
-  public void addActionListener(ActionListener listener) {
-
-  }
-
 }
