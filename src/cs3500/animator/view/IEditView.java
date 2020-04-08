@@ -1,10 +1,13 @@
 package cs3500.animator.view;
 
 import cs3500.animator.model.ReadOnlyModel;
+
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
+
+import javax.swing.*;
 
 /**
  * IEditView is an interface that will extend all methods from IView and implement a view unique
@@ -33,8 +36,11 @@ public interface IEditView extends IView {
    */
   boolean getCheckState();
 
+  JButton getPlayButton();
+
   /**
    * Helper to change the resume/pause button's color based on controller's command.
+   *
    * @param color green color if animation is playing, red color if animation is paused.
    */
   void changeResumeButtonColor(Color color);

@@ -7,8 +7,12 @@ import cs3500.animator.model.IModel;
 import cs3500.animator.model.ReadOnlyModel;
 import cs3500.animator.view.EditView;
 import cs3500.animator.view.IEditView;
+
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
+
 import org.junit.Test;
 
 public class AnimationControllerTest {
@@ -21,9 +25,13 @@ public class AnimationControllerTest {
 
   @Test
   public void testModelBuild() {
-    ActionEvent playButton = new ActionEvent(v, 1, "Play Button");
+    ActionEvent playButton = new ActionEvent(v.getPlayButton(),
+            ActionEvent.ACTION_PERFORMED, "Play Button");
+//    for (ActionListener l : v.getPlayButton().getActionListeners()) {
+    c.playAnimation();
     c.actionPerformed(playButton);
     assertEquals("Play Button", playButton.getActionCommand());
+//    }
   }
 
 }

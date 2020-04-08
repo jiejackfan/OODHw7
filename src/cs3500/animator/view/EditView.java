@@ -246,8 +246,13 @@ public class EditView extends JFrame implements IEditView {
   }
 
   @Override
-  public boolean getCheckState(){
+  public boolean getCheckState() {
     return repeatBox.isSelected();
+  }
+
+  @Override
+  public JButton getPlayButton() {
+    return playButton;
   }
 
   @Override
@@ -333,5 +338,6 @@ public class EditView extends JFrame implements IEditView {
     p.add(animatorPanel, 0);
     p.repaint();
   }
+
 
 }
