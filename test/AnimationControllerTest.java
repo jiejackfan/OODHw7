@@ -13,8 +13,12 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
+import org.junit.ComparisonFailure;
 import org.junit.Test;
 
+/**
+ *
+ */
 public class AnimationControllerTest {
 
   // Helper function to help setup model controller view objects so tests can
@@ -32,6 +36,24 @@ public class AnimationControllerTest {
     c.actionPerformed(playButton);
     assertEquals("Play Button", playButton.getActionCommand());
 //    }
+  }
+
+  @Test(expected = ComparisonFailure.class)
+  public void testPlayButtonWrongCommand() {
+    ActionEvent playButton = new ActionEvent(v.getPlayButton(),
+            ActionEvent.ACTION_PERFORMED, "Play");
+//    for (ActionListener l : v.getPlayButton().getActionListeners()) {
+    c.playAnimation();
+    c.actionPerformed(playButton);
+//    }
+  }
+
+  @Test(expected = ComparisonFailure.class)
+  public void testPlayButtonCommandNull() {
+    ActionEvent playButton = new ActionEvent(v.getPlayButton(),
+            ActionEvent.ACTION_PERFORMED, null);
+    c.playAnimation();
+    c.actionPerformed(playButton);
   }
 
 }
