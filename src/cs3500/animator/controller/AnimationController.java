@@ -140,6 +140,7 @@ public class AnimationController implements IController, ActionListener {
       case "Repeat Box":
         break;
 
+      // Load another AnimatorPanel and replace the current animation.
       case "Load Button":
         File loadLocation = v.getLoadLocation();
         System.out.println("load " + loadLocation.getAbsolutePath());
