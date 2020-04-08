@@ -9,8 +9,6 @@ import java.awt.*;
  */
 public interface IModel extends ReadOnlyModel {
 
-  ////////////////////////////////////
-
   /**
    * This function will create a shape (out of rectangle, oval right now). User will store this
    * shape into two map data structures (for both motions and keyframes) that will be used to
