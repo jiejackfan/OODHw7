@@ -20,4 +20,17 @@ public interface IController {
    * @param tickPerSecond the ticks persecond of an animation.
    */
   void setDelay(double tickPerSecond);
+
+  /**
+   * Helper to output the current message stored in the testStr variable.
+   * Used in JUnit test for controller to check for action listener.
+   * @return a string stored in testStr
+   */
+  String getTestString();
+
+  /**
+   * Get the current time of the timer.
+   * @return integer time in seconds.
+   */
+  int getCurrentTick();
 }
