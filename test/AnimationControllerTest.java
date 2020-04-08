@@ -10,7 +10,7 @@ import org.junit.Test;
 public class AnimationControllerTest {
 
   // Helper function to help setup model controller view objects so tests can
-  //  manipulate those objects.
+  // manipulate those objects.
   IModel m = new AnimationModel();
   IEditView v = new EditView(m, 1000, 1000, 0, 0);
   IController c = new AnimationController(v, m);
@@ -19,5 +19,6 @@ public class AnimationControllerTest {
   public void testModelBuild() {
 
   }
+
 
 }

@@ -50,7 +50,7 @@ View: 4 different types:
   Print toString function to a txt file.
 
 4.Edit View (NEW):
-  Sets up a panel where you can interactively play with the animation. You can start, pause, resume, replay, loop, fast forward, and slow the animation. You are also able to insert a keyframe to a specific time for a named shape, delete a keyframe by providing the name of the shape and the index of the keyframe, and modify a keyframe by specifying all parameters, including the position, size (width and height), and color of a named shape at a certain time. Save and load function were added in the panel as well. You should be about to load a .txt to this view and display your animation or save your animation (in its last modified state) in either as a text file or as a SVG file.
+  Sets up a panel where you can interactively play with the animation. You can start, pause, resume, replay, loop, fast forward (x1.2), and slow (x0.8) the animation. You are also able to insert a keyframe to a specific time for a named shape, delete a keyframe by providing the name of the shape and the index of the keyframe, and modify a keyframe by specifying all parameters, including the position, size (width and height), and color of a named shape at a certain time. Save and load function were added in the panel as well. You should be about to load a .txt to this view and display your animation or save your animation (in its last modified state) in either as a text file or as a SVG file.
   
 ----------------------------------------------------------------------------------------------------------------------------------------
 Controller:
