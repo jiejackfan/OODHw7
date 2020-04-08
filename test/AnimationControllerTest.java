@@ -24,7 +24,7 @@ public class AnimationControllerTest {
   AnimationController c = new AnimationController(v, m);
 
   @Test
-  public void testModelBuild() {
+  public void testPlayButton() {
     ActionEvent playButton = new ActionEvent(v.getPlayButton(),
             ActionEvent.ACTION_PERFORMED, "Play Button");
 //    for (ActionListener l : v.getPlayButton().getActionListeners()) {
