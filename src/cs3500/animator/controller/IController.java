@@ -33,4 +33,5 @@ public interface IController {
    * @return integer time in seconds.
    */
   int getCurrentTick();
+
 }

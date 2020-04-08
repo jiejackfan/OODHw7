@@ -37,6 +37,7 @@ public class AnimationController implements IController, ActionListener {
   protected Timer timer;
   protected int currentTick = 0;
 
+
   public static int DELAY;
 
   private String testStr;
@@ -52,6 +53,8 @@ public class AnimationController implements IController, ActionListener {
       if (m.getCurrentTick() < m.returnMaxTick()) {
         currentTick = currentTick + 1;
         m.setTick(currentTick);
+
+
       } else if (m.getCurrentTick() == m.returnMaxTick()) {
         if (((EditView) v).getCheckState()) {
           currentTick = 0;
@@ -273,4 +276,5 @@ public class AnimationController implements IController, ActionListener {
   public int getCurrentTick() {
     return this.currentTick;
   }
+
 }
