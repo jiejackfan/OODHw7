@@ -48,5 +48,35 @@
         <jarDirectory url="file://$MODULE_DIR$/../../../commons-io-2.6" recursive="false" type="SOURCES" />
       </library>
     </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/../../commons-cli-1.4" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="file://$MODULE_DIR$/../../commons-cli-1.4/apidocs" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../../commons-cli-1.4" />
+        </SOURCES>
+        <jarDirectory url="file://$MODULE_DIR$/../../commons-cli-1.4" recursive="false" />
+        <jarDirectory url="file://$MODULE_DIR$/../../commons-cli-1.4" recursive="false" type="SOURCES" />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/../commons-io-2.6" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="file://$MODULE_DIR$/../commons-io-2.6/docs" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../commons-io-2.6" />
+        </SOURCES>
+        <jarDirectory url="file://$MODULE_DIR$/../commons-io-2.6" recursive="false" />
+        <jarDirectory url="file://$MODULE_DIR$/../commons-io-2.6" recursive="false" type="SOURCES" />
+      </library>
+    </orderEntry>
   </component>
 </module>

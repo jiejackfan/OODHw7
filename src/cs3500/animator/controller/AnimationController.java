@@ -1,8 +1,6 @@
 package cs3500.animator.controller;
 
-import cs3500.animator.model.AnimationModel;
 import cs3500.animator.model.IModel;
-import cs3500.animator.util.AnimationReader;
 import cs3500.animator.view.EditView;
 import cs3500.animator.view.IEditView;
 import cs3500.animator.view.IView;
@@ -19,10 +17,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.swing.Timer;
 
 
@@ -132,7 +127,6 @@ public class AnimationController implements IController, ActionListener {
         break;
       case "Slow Down Button":
         int newDelay2 = DELAY + (DELAY / 5);
-        System.out.println(timer.getDelay());
         DELAY = newDelay2;
         timer.setDelay(newDelay2);
         break;
@@ -140,27 +134,41 @@ public class AnimationController implements IController, ActionListener {
         break;
       case "Load Button":
         File loadLocation = v.getLoadLocation();
+        System.out.println("load " + loadLocation.getAbsolutePath());
         Readable inputFileContent = null;
         try {
           inputFileContent = new StringReader(
               new String(Files.readAllBytes(Paths.get(loadLocation.getAbsolutePath()))));
         } catch (IOException ex) {
+          System.out.println("open load file failed");
           ex.printStackTrace();
         }
-        this.m = AnimationReader.parseFile(inputFileContent, new AnimationModel.Builder());
-        //reset time and animation here....
+
+        //reset time
+        timer.stop();
+        currentTick = 0;
+
+        //this.m = AnimationReader.parseFile(inputFileContent, new AnimationModel.Builder());
+
+        v.refresh();
+        timer.start();
+
         break;
       case "Save SVG Button":
         File saveLocation = v.getSaveLocation();
         System.out.println(saveLocation.getAbsolutePath());
         IView svgView = new SVGView(m, 0, 0, 0, 0);
-        svgView.setOutputFileName(saveLocation.getAbsolutePath() + "out.svg");
+        svgView.setOutputFileName(saveLocation.getAbsolutePath() + "\\out.svg");
         svgView.setDelay(DELAY);
         IController newController = new AnimationController(svgView, m);
         newController.playAnimation();
         break;
       case "Save Text Button":
-
+        File saveLocation2 = v.getSaveLocation();
+        IView txtView = new TextView(m);
+        txtView.setOutputFileName(saveLocation2.getAbsolutePath() + "\\out.txt");
+        IController newController2 = new AnimationController(txtView, m);
+        newController2.playAnimation();
         break;
       case "Modify Keyframe":
         List<String> tmp4 = v.getEditPanelInput();
