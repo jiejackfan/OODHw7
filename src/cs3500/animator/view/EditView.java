@@ -108,7 +108,7 @@ public class EditView extends JFrame implements IEditView {
     loadButton = new JButton("Load File");
     loadButton.setActionCommand("Load Button");
     controlPanel.add(loadButton);
-    loadLabel = new JLabel("Load a file^^^");
+    loadLabel = new JLabel("Load a file⬆");
     controlPanel.add(loadLabel);
     saveSVGButton = new JButton("Save as SVG");
     saveSVGButton.setActionCommand("Save SVG Button");
@@ -116,7 +116,7 @@ public class EditView extends JFrame implements IEditView {
     saveTextButton = new JButton("Save as Txt");
     saveTextButton.setActionCommand("Save Text Button");
     controlPanel.add(saveTextButton);
-    saveLabel = new JLabel("Save a file^^^");
+    saveLabel = new JLabel("Save a file⬆");
     controlPanel.add(saveLabel);
     p.add(controlPanel);
 
@@ -158,7 +158,7 @@ public class EditView extends JFrame implements IEditView {
     modifyKeyframeButton = new JButton("Modify");
     modifyKeyframeButton.setActionCommand("Modify Keyframe");
     editPanel.add(modifyKeyframeButton);
-    editPanel.setBorder(new EmptyBorder(new Insets(50, 50, 50, 50)));
+    editPanel.setBorder(new EmptyBorder(new Insets(50, 20, 50, 20)));
     p.add(editPanel);
 
     insertPanel = new JPanel();
@@ -168,7 +168,7 @@ public class EditView extends JFrame implements IEditView {
     keyframeInsertDeleteName.setMaximumSize(new Dimension(Integer.MAX_VALUE,
         keyframeInsertDeleteName.getMinimumSize().height));
     insertPanel.add(keyframeInsertDeleteName);
-    insertPanel.add(new JLabel("Time:"));
+    insertPanel.add(new JLabel("Time(insert)/Index(delete):"));
     keyframeInsertDeleteTime = new JTextField(1);
     keyframeInsertDeleteTime.setMaximumSize(new Dimension(Integer.MAX_VALUE,
         keyframeInsertDeleteTime.getMinimumSize().height));
@@ -179,7 +179,7 @@ public class EditView extends JFrame implements IEditView {
     deleteKeyframeButton.setActionCommand("Delete Keyframe");
     insertPanel.add(insertKeyframeButton);
     insertPanel.add(deleteKeyframeButton);
-    insertPanel.setBorder(new EmptyBorder(new Insets(50, 50, 50, 50)));
+    insertPanel.setBorder(new EmptyBorder(new Insets(50, 20, 50, 20)));
     p.add(insertPanel);
 
     shapePanel = new JPanel();
@@ -200,12 +200,11 @@ public class EditView extends JFrame implements IEditView {
     deleteShapeButton.setActionCommand("Delete Shape");
     shapePanel.add(insertShapeButton);
     shapePanel.add(deleteShapeButton);
-    shapePanel.setBorder(new EmptyBorder(new Insets(50, 50, 50, 50)));
+    shapePanel.setBorder(new EmptyBorder(new Insets(50, 20, 50, 20)));
     p.add(shapePanel);
 
     add(p);
     pack();
-
   }
 
   @Override
@@ -216,7 +215,6 @@ public class EditView extends JFrame implements IEditView {
   @Override
   public void render() {
     this.setVisible(true);
-
   }
 
   @Override
@@ -335,7 +333,5 @@ public class EditView extends JFrame implements IEditView {
     p.add(animatorPanel, 0);
     p.repaint();
   }
-
-
 
 }
