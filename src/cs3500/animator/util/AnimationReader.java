@@ -83,11 +83,11 @@ public class AnimationReader {
 
   private static <Doc> void readMotion(Scanner s, AnimationBuilder<Doc> builder) {
     String[] fieldNames = new String[]{"initial time", "initial x-coordinate",
-            "initial y-coordinate", "initial width", "initial height",
-            "initial red value", "initial green value",
-            "initial blue value", "final time", "final x-coordinate",
-            "final y-coordinate", "final width", "final height",
-            "final red value", "final green value", "final blue value"};
+        "initial y-coordinate", "initial width", "initial height",
+        "initial red value", "initial green value",
+        "initial blue value", "final time", "final x-coordinate",
+        "final y-coordinate", "final width", "final height",
+        "final red value", "final green value", "final blue value"};
     int[] vals = new int[16];
     String name;
     if (s.hasNext()) {
@@ -101,8 +101,6 @@ public class AnimationReader {
     builder.addMotion(name,
             vals[0], vals[1], vals[2], vals[3], vals[4], vals[5], vals[6], vals[7],
             vals[8], vals[9], vals[10], vals[11], vals[12], vals[13], vals[14], vals[15]);
-//    builder.addKeyframe(name, vals[8], vals[9], vals[10], vals[11], vals[12], vals[13], vals[14],
-//            vals[15]);
   }
 
   private static int getInt(Scanner s, String label, String fieldName) {

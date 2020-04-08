@@ -187,8 +187,14 @@ public class AnimationController implements IController, ActionListener {
           break;
         case "Modify Keyframe":
           List<String> tmp4 = v.getEditPanelInput();
-          int time = 0, x = 0, y = 0, red = 0, green = 0, blue = 0;
-          double width = 0.0, height = 0.0;
+          int time = 0;
+          int x = 0;
+          int y = 0;
+          int red = 0;
+          int green = 0;
+          int blue = 0;
+          double width = 0.0;
+          double height = 0.0;
           try {
             String[] positions = tmp4.get(2).split(" ");
             if (positions.length != 2) {

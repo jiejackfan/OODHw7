@@ -9,8 +9,6 @@ import cs3500.animator.model.IShape;
 import cs3500.animator.model.Position2D;
 import cs3500.animator.model.Shape;
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.Test;
 
 /**
@@ -127,38 +125,6 @@ public class AnimationModelTest {
             100, 255, 0, 0, 20,
             200, 200, 50, 100, 255, 0, 0);
   }
-
-//  @Test(expected = IllegalArgumentException.class)
-//  public void testAddMotionInvalidStartX() {
-//    animationOne.createShape("rectangle", "R");
-//    animationOne.addMotion("R", 1, -1, 200, 50,
-//            100, 255, 0, 0, 20,
-//            200, 200, 50, 100, 255, 0, 0);
-//  }
-
-//  @Test(expected = IllegalArgumentException.class)
-//  public void testAddMotionInvalidStartY() {
-//    animationOne.createShape("rectangle", "R");
-//    animationOne.addMotion("R", 1, 0, -100, 50,
-//            100, 255, 0, 0, 20,
-//            200, 200, 50, 100, 255, 0, 0);
-//  }
-
-//  @Test(expected = IllegalArgumentException.class)
-//  public void testAddMotionInvalidEndX() {
-//    animationOne.createShape("rectangle", "R");
-//    animationOne.addMotion("R", 1, 200, 200, 50,
-//            100, 255, 0, 0, 20,
-//            -200, 200, 50, 100, 255, 0, 0);
-//  }
-
-//  @Test(expected = IllegalArgumentException.class)
-//  public void testAddMotionInvalidEndY() {
-//    animationOne.createShape("rectangle", "R");
-//    animationOne.addMotion("R", 1, 200, 200, 50,
-//            100, 255, 0, 0, 20,
-//            200, -200, 50, 100, 255, 0, 0);
-//  }
 
   @Test(expected = IllegalArgumentException.class)
   public void testAddMotionInvalidStartWidth() {
@@ -420,113 +386,6 @@ public class AnimationModelTest {
     assertEquals("Shape R rectangle\nShape O oval\n", animationOne.toString());
   }
 
-//  @Test(expected = IllegalStateException.class)
-//  public void testInvalidAnimationTimeOverlap() {
-//    animationOne.createShape("rectangle", "R");
-//    // The first motion starts at 0 and ends at 20
-//    // The second motion starts at 10 and ends at 50
-//    animationOne.addMotion("R", 1, 200, 200, 50,
-//            100, 255, 0, 0, 20,
-//            200, 200, 50, 100, 255, 0, 0);
-//    animationOne.addMotion("R", 10, 200, 200, 50,
-//            100, 255, 0, 0, 50,
-//            300, 300, 50, 100, 255, 0, 0);
-//    animationOne.toString();
-//  }
-
-//  @Test(expected = IllegalStateException.class)
-//  public void testInvalidAnimationUnorderedTimeTeleport() {
-//    animationOne.createShape("rectangle", "R");
-//    // The first motion starts at 40 and ends at 50
-//    // The second motion starts at 0 and ends at 20
-//    animationOne.addMotion("R", 40, 200, 200, 50,
-//            100, 255, 0, 0, 50,
-//            300, 300, 50, 100, 255, 0, 0);
-//    animationOne.addMotion("R", 1, 200, 200, 50,
-//            100, 255, 0, 0, 20,
-//            200, 200, 50, 100, 255, 0, 0);
-//    animationOne.toString();
-//  }
-
-//  @Test(expected = IllegalStateException.class)
-//  public void testInvalidAnimationStartDoesNotEqualToEndPosition() {
-//    animationOne.createShape("rectangle", "R");
-//    // The first motion ends with position (200,200)
-//    // The second motion starts with position (2,2)
-//    animationOne.addMotion("R", 1, 200, 200, 50,
-//            100, 255, 0, 0, 20,
-//            200, 200, 100, 100, 255, 0, 0);
-//    animationOne.addMotion("R", 20, 2, 2, 200,
-//            100, 255, 0, 0, 50,
-//            300, 300, 50, 100, 255, 0, 0);
-//    animationOne.toString();
-//  }
-
-//  @Test(expected = IllegalStateException.class)
-//  public void testInvalidAnimationStartDoesNotEqualToEndWidth() {
-//    animationOne.createShape("rectangle", "R");
-//    // The first motion ends with width 200
-//    // The second motion starts with width 50
-//    animationOne.addMotion("R", 1, 200, 200, 50,
-//            100, 255, 0, 0, 20,
-//            200, 200, 200, 100, 255, 0, 0);
-//    animationOne.addMotion("R", 20, 200, 200, 50,
-//            100, 255, 0, 0, 50,
-//            300, 300, 50, 100, 255, 0, 0);
-//    animationOne.toString();
-//  }
-
-//  @Test(expected = IllegalStateException.class)
-//  public void testInvalidAnimationStartDoesNotEqualToEndHeight() {
-//    animationOne.createShape("rectangle", "R");
-//    // The first motion ends with height 100
-//    // The second motion starts with height 200
-//    animationOne.addMotion("R", 1, 200, 200, 50,
-//            100, 255, 0, 0, 20,
-//            200, 200, 100, 100, 255, 0, 0);
-//    animationOne.addMotion("R", 20, 200, 200, 200,
-//            200, 255, 0, 0, 50,
-//            300, 300, 50, 100, 255, 0, 0);
-//    animationOne.toString();
-//  }
-
-//  @Test(expected = IllegalStateException.class)
-//  public void testInvalidAnimationStartDoesNotEqualToEndColor() {
-//    animationOne.createShape("rectangle", "R");
-//    // The first motion ends with color rgb(0,0,0)
-//    // The second motion starts with color rgb(3,5,4)
-//    animationOne.addMotion("R", 1, 200, 200, 50,
-//            100, 255, 0, 0, 20,
-//            200, 200, 100, 100, 0, 0, 0);
-//    animationOne.addMotion("R", 20, 200, 200, 200,
-//            100, 3, 5, 4, 50,
-//            300, 300, 50, 100, 255, 0, 0);
-//    animationOne.toString();
-//  }
-
-  /**
-   * getAnimation(time) invalid: time < 0 valid: get the current state of the animation.
-   */
-
-//  @Test(expected = IllegalArgumentException.class)
-//  public void testGetAnimationAtInvalidTime() {
-//    animationOne.createShape("rectangle", "R");
-//    animationOne.createShape("oval", "O");
-//
-//    animationOne.addMotion("R", 1, 200, 200, 50,
-//            100, 255, 0, 0, 10,
-//            200, 200, 50, 100, 255, 0, 0);
-//    animationOne.addMotion("R", 10, 200, 200, 50,
-//            100, 255, 0, 0, 50,
-//            300, 300, 50, 100, 255, 0, 0);
-//    animationOne.addMotion("O", 6, 440, 70, 120,
-//            60, 0, 0, 255, 20,
-//            440, 70, 120, 60, 0, 0, 255);
-//    animationOne.addMotion("O", 20, 440, 70, 120,
-//            60, 0, 0, 255, 50,
-//            440, 250, 120, 60, 0, 0, 255);
-//    animationOne.getAnimation(-10);
-//  }
   @Test
   public void testShapeGetName() {
     IShape r = new Shape(new Color(0, 0, 0), new Position2D(0, 0), 10, 10, "R",
@@ -560,94 +419,6 @@ public class AnimationModelTest {
             DifferentShapes.rectangle);
     assertFalse(r1.equals(r2));
   }
-
-//  @Test
-//  public void testGetAnimationAtValidAtTime1NoOval() {
-//    animationOne.createShape("rectangle", "R");
-//    animationOne.createShape("oval", "O");
-//    // R - from 1: at (0,0) size 10*10 with rgb(0,0,0)
-//    //     to 11: at (10,10) size 20*20 with rgb(100,100,100)
-//    animationOne.addMotion("R", 1, 0, 0, 10,
-//            10, 0, 0, 0, 11,
-//            10, 10, 20, 20, 100, 100, 100);
-//    // O - from 11: at (0,0) size 10*10 with rgb(0,0,0)
-//    //     to 21: at (10,10) size 20*20 with rgb(100,100,100)
-//    animationOne.addMotion("O", 21, 0, 0, 10,
-//            10, 0, 0, 0, 21,
-//            10, 10, 20, 20, 100, 100, 100);
-//    List<IShape> currentShape = new ArrayList<>();
-//    currentShape.add(
-//            new Shape(new Color(0, 0, 0), new Position2D(0, 0), 10, 10, "R",
-//                DifferentShapes.rectangle));
-//    assertEquals(currentShape.get(0), animationOne.getAnimation(1).get(0));
-//  }
-
-//  @Test
-//  public void testGetAnimationAtValidAtTime6OnlyRectangle() {
-//    animationOne.createShape("rectangle", "R");
-//    animationOne.createShape("oval", "O");
-//    // R - from 1: at (0,0) size 10*10 with rgb(0,0,0)
-//    //     to 11: at (10,10) size 20*20 with rgb(100,100,100)
-//    animationOne.addMotion("R", 1, 0, 0, 10,
-//            10, 0, 0, 0, 11,
-//            10, 10, 20, 20, 100, 100, 100);
-//    // O - from 11: at (0,0) size 10*10 with rgb(0,0,0)
-//    //     to 21: at (10,10) size 20*20 with rgb(100,100,100)
-//    animationOne.addMotion("O", 11, 0, 0, 10,
-//            10, 0, 0, 0, 21,
-//            10, 10, 20, 20, 100, 100, 100);
-//    List<IShape> currentShape = new ArrayList<>();
-//    currentShape.add(
-//            new Shape(new Color(50, 50, 50), new Position2D(5, 5), 15.0, 15.0, "R",
-//                DifferentShapes.rectangle));
-//    assertEquals(currentShape.get(0), animationOne.getAnimation(6).get(0));
-//  }
-//
-//  @Test
-//  public void testGetAnimationAtValidAtTime11HaveBothShapes() {
-//    animationOne.createShape("rectangle", "R");
-//    animationOne.createShape("oval", "O");
-//    // R - from 1: at (0,0) size 10*10 with rgb(0,0,0)
-//    //     to 11: at (10,10) size 20*20 with rgb(100,100,100)
-//    animationOne.addMotion("R", 1, 0, 0, 10,
-//            10, 0, 0, 0, 11,
-//            10, 10, 20, 20, 100, 100, 100);
-//    // O - from 11: at (0,0) size 10*10 with rgb(0,0,0)
-//    //     to 21: at (10,10) size 20*20 with rgb(100,100,100)
-//    animationOne.addMotion("O", 11, 0, 0, 10,
-//            10, 0, 0, 0, 21,
-//            10, 10, 20, 20, 100, 100, 100);
-//    List<IShape> currentShape = new ArrayList<>();
-//    currentShape.add(
-//            new Shape(new Color(100, 100, 100), new Position2D(10, 10), 20, 20, "R",
-//                DifferentShapes.rectangle));
-//    currentShape.add(
-//            new Shape(new Color(0, 0, 0), new Position2D(0, 0), 10, 10, "O",
-//                DifferentShapes.oval));
-//    assertEquals(currentShape.get(0), animationOne.getAnimation(11).get(0));
-//    assertEquals(currentShape.get(1), animationOne.getAnimation(11).get(1));
-//  }
-
-//  @Test
-//  public void testGetAnimationAtValidAtTime21NoRectangle() {
-//    animationOne.createShape("rectangle", "R");
-//    animationOne.createShape("oval", "O");
-//    // R - from 1: at (0,0) size 10*10 with rgb(0,0,0)
-//    //     to 11: at (10,10) size 20*20 with rgb(100,100,100)
-//    animationOne.addMotion("R", 1, 0, 0, 10,
-//            10, 0, 0, 0, 11,
-//            10, 10, 20, 20, 100, 100, 100);
-//    // O - from 11: at (0,0) size 10*10 with rgb(0,0,0)
-//    //     to 21: at (10,10) size 20*20 with rgb(100,100,100)
-//    animationOne.addMotion("O", 11, 0, 0, 10,
-//            10, 0, 0, 0, 21,
-//            10, 10, 20, 20, 100, 100, 100);
-//    List<IShape> currentShape = new ArrayList<>();
-//    currentShape.add(
-//            new Shape(new Color(100, 100, 100), new Position2D(10, 10), 20, 20, "O",
-//                DifferentShapes.oval));
-//    assertEquals(currentShape.get(0), animationOne.getAnimation(21).get(0));
-//  }
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidRemoveMotionNameDoesNotExist() {

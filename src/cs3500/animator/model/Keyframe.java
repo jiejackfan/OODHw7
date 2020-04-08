@@ -1,6 +1,6 @@
 package cs3500.animator.model;
 
-import java.awt.*;
+import java.awt.Color;
 
 /**
  * This class represents a state of a time of one particular shape. The states include:  time,

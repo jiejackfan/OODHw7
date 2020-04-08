@@ -29,27 +29,48 @@ public class EditView extends JFrame implements IEditView {
   AnimatorPanel animatorPanel;
 
   //variable for all panels in the frame
-  protected JPanel controlPanel, editPanel, insertPanel, p, shapePanel;
+  protected JPanel controlPanel;
+  protected JPanel editPanel;
+  protected JPanel insertPanel;
+  protected JPanel p;
+  protected JPanel shapePanel;
 
   //variable for contorl panel
-  protected JButton playButton, resumeButton, restartButton, speedUpButton, slowDownButton;
-  protected JButton loadButton, saveSVGButton, saveTextButton;
-  protected JFileChooser loadWindow, saveSVGWindow, saveTextWindow;
-  protected JLabel loadLabel, saveLabel;
+  protected JButton playButton;
+  protected JButton resumeButton;
+  protected JButton restartButton;
+  protected JButton speedUpButton;
+  protected JButton slowDownButton;
+
+  protected JButton loadButton;
+  protected JButton saveSVGButton;
+  protected JButton saveTextButton;
+  protected JFileChooser loadWindow;
+  protected JFileChooser saveSVGWindow;
+  protected JLabel loadLabel;
+  protected JLabel saveLabel;
   protected JCheckBox repeatBox;
 
   //variable for modifying keyframes of a shape. For edit panel.
   protected JButton modifyKeyframeButton;
-  protected JTextField modifyKeyframeName, modifyKeyframeTime, modifyKeyframePosition,
-    modifyKeyframeWidth, modifyKeyframeHeight, modifyKeyframeColor;
+  protected JTextField modifyKeyframeName;
+  protected JTextField modifyKeyframeTime;
+  protected JTextField modifyKeyframePosition;
+  protected JTextField modifyKeyframeWidth;
+  protected JTextField modifyKeyframeHeight;
+  protected JTextField modifyKeyframeColor;
 
   //variables for creating and deleting keyframs of a shape
-  protected JTextField keyframeInsertDeleteName, keyframeInsertDeleteTime;
-  protected JButton insertKeyframeButton, deleteKeyframeButton;
+  protected JTextField keyframeInsertDeleteName;
+  protected JTextField keyframeInsertDeleteTime;
+  protected JButton insertKeyframeButton;
+  protected JButton deleteKeyframeButton;
 
   //variables for creating and deleting shapes
-  protected JButton insertShapeButton, deleteShapeButton;
-  protected JTextField shapeShapeName, shapeShapeType;
+  protected JButton insertShapeButton;
+  protected JButton deleteShapeButton;
+  protected JTextField shapeShapeName;
+  protected JTextField shapeShapeType;
 
   /**
    * Constructor for the EditView. Set up the entire gui appearance by defining buttons, textboxes,
@@ -224,7 +245,7 @@ public class EditView extends JFrame implements IEditView {
 
   @Override
   public void setDelay(int delay) {
-
+    throw new UnsupportedOperationException("No need for setDelay in Edit View");
   }
 
   @Override

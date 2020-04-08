@@ -6,7 +6,6 @@ import cs3500.animator.model.AnimationModel;
 import cs3500.animator.model.IModel;
 import cs3500.animator.util.AnimationBuilder;
 import cs3500.animator.util.AnimationReader;
-import cs3500.animator.view.EditView;
 import cs3500.animator.view.IEditView;
 import cs3500.animator.view.IView;
 import cs3500.animator.view.ViewCreator;
@@ -15,7 +14,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import javax.swing.text.View;
 
 /**
  * Main function of this animator that will be converted into the .jar file. Accpets different

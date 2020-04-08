@@ -3,7 +3,6 @@ package cs3500.animator.model;
 import cs3500.animator.util.AnimationBuilder;
 
 import java.awt.Color;
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -12,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.plaf.ColorUIResource;
 
 /**
  * The animation model implementation. It will implement all methods declared in IModel and
@@ -60,7 +58,8 @@ public class AnimationModel implements IModel {
       throw new IllegalArgumentException("Invalid shape input.");
     }
     if (nameMap.containsKey(name)
-            && nameMap.containsValue(new Shape(name, DifferentShapes.valueOf(shape.toLowerCase())))) {
+            && nameMap.containsValue(new Shape(name,
+        DifferentShapes.valueOf(shape.toLowerCase())))) {
       throw new IllegalArgumentException("Shape exists, can't add again.");
     }
     nameMap.put(name, new Shape(name, DifferentShapes.valueOf(shape.toLowerCase())));
@@ -178,23 +177,7 @@ public class AnimationModel implements IModel {
               0, 0, 0);
       return;
     }
-    // If the shape has 1 keyframe
-//    if (frames.get(shape).size() == 1) {
-//      if (hasKeyFrame(frames.get(shape), time)) {
-//        throw new IllegalArgumentException("This keyframe already exists.");
-//      } else {
-//        frames.get(shape).add(frames.get(shape).get(0));
-//        frames.get(shape).get(1).setTime(time);
-//        if (time < frames.get(shape).get(0).getTime()) {
-//          tmpMotion.changeStartTime(time);
-//          animation.get(shape).add(0,tmpMotion);
-//        } else if (time > frames.get(shape).get(0).getTime()) {
-//          tmpMotion.changeEndTime(time);
-//          animation.get(shape).add(tmpMotion);
-//        }
-//        return;
-//      }
-//    }
+
     int startTime = frames.get(shape).get(0).getTime();
     int endTime = frames.get(shape).get(frames.get(shape).size() - 1).getTime();
 
@@ -378,10 +361,7 @@ public class AnimationModel implements IModel {
    */
   private String listOfMotionsToString(String name, List<Motion> listOfMotion) {
     listOfMotion.sort(new SortByStartTime());
-//    if (!checkValidAnimation(listOfMotion)) {
-//      throw new IllegalStateException("There is teleportation or overlap in this shape, this "
-//              + "shape will be deleted.");
-//    }
+
     String result = "";
     for (Motion m : listOfMotion) {
       result = result + "motion " + name + " " + m.toString() + "\n";
@@ -547,10 +527,10 @@ public class AnimationModel implements IModel {
   /**
    * Check whether the given time is in the time interval of the given list of keyframes.
    *
-   * @param fs   the given list of keyframes
-   * @param time the given time
+   * @param fs   the given list of keyframes.
+   * @param time the given time.
    * @return a boolean indicates whether the given time is in the time interval of the given list of
-   * keyframes
+   *          keyframes.
    */
   private boolean isTimeInFrames(List<Keyframe> fs, int time) {
     int startTime = fs.get(0).getTime();
@@ -561,10 +541,10 @@ public class AnimationModel implements IModel {
    * Find the keyframe right before and right after the given time from the given list of
    * keyframes.
    *
-   * @param fs   the given list of keyframes
-   * @param time the given time
+   * @param fs   the given list of keyframes.
+   * @param time the given time.
    * @return a list of keyframes that contains the keyframe right before and right after the given
-   * time
+   *          time.
    */
   private List<Keyframe> findFrame(List<Keyframe> fs, int time) {
     List<Keyframe> kfs = new ArrayList<>();

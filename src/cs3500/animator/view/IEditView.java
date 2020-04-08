@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.JButton;
 
 /**
  * IEditView is an interface that will extend all methods from IView and implement a view unique
@@ -19,15 +19,12 @@ import javax.swing.*;
 public interface IEditView extends IView {
 
   /**
-   * this is to force the view to have a method to set up actions for buttons.
-   * All the buttons must be given this action listener
-   * <p>
+   * This is to force the view to have a method to set up actions for buttons.
+   * All the buttons must be given this action listener.
    * Thus our Swing-based implementation of this interface will already have such a
    * method.
-   *
-   * @param listener
+   * @param listener the listener for events.
    */
-
   void addActionListener(ActionListener listener);
 
   /**

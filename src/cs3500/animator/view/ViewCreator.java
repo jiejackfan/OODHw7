@@ -46,6 +46,17 @@ public class ViewCreator {
             + "specifi ed in the input argument.");
   }
 
+  /**
+   * Function used to create a edit view specifically. This is because EditView need to be an
+   *  IEditView object instead of IView object.
+   * @param type the type of view to create.
+   * @param m read only model.
+   * @param width integer of the width for AnimatorPanel.
+   * @param height integer of the height for AnimatorPanel.
+   * @param x position of JFrame window.
+   * @param y position of JFrame window.
+   * @return IEditView for the Animation.
+   */
   public IEditView createEditView(String type, ReadOnlyModel m, int width, int height, int x,
       int y) {
     if (viewType.edit == viewType.valueOf(type.toLowerCase())) {

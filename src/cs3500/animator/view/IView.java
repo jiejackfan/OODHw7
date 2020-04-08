@@ -1,7 +1,5 @@
 package cs3500.animator.view;
 
-import java.awt.event.ActionListener;
-
 /**
  * View for animation: display the animation panel and provide visual to the user. This class will
  * take care of render (starting) the view, refreshing the view everytime controller updates its

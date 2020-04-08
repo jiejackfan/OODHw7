@@ -36,11 +36,9 @@ public class AnimationControllerTest {
   public void testPlayButtonWrongCommand() {
     ActionEvent playButton = new ActionEvent(v.getPlayButton(),
         ActionEvent.ACTION_PERFORMED, "Play");
-//    for (ActionListener l : v.getPlayButton().getActionListeners()) {
     c.playAnimation();
     c.actionPerformed(playButton);
     assertEquals("No such action command", c.getTestString());
-//    }
 
   }
 

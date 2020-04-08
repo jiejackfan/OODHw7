@@ -296,6 +296,13 @@ public class Motion {
     this.endColor = endColor;
   }
 
+  /**
+   * Change the starting information of a Motion.
+   * @param position starting position.
+   * @param width starting width.
+   * @param height starting height.
+   * @param color starting color.
+   */
   public void changeMotionStart(Position2D position, double width, double height, Color color) {
     this.startPosition = position;
     this.startWidth = width;
@@ -303,6 +310,13 @@ public class Motion {
     this.startColor = color;
   }
 
+  /**
+   * Change the ending information of a Motion.
+   * @param position ending position.
+   * @param width ending width.
+   * @param height ending height.
+   * @param color ending color.
+   */
   public void changeMotionEnd(Position2D position, double width, double height, Color color) {
     this.endPosition = position;
     this.endWidth = width;

@@ -2,7 +2,6 @@ package cs3500.animator.view;
 
 import cs3500.animator.model.ReadOnlyModel;
 
-import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 
 /**
