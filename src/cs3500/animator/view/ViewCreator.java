@@ -12,7 +12,7 @@ public class ViewCreator {
    * Enum to represent the 3 different types of views a user can create.
    */
   public enum viewType {
-    text, svg, visual, edit;
+    text, svg, visual, edit
   }
 
   /**

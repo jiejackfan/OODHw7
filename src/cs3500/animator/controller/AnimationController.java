@@ -1,6 +1,8 @@
 package cs3500.animator.controller;
 
+import cs3500.animator.model.AnimationModel;
 import cs3500.animator.model.IModel;
+import cs3500.animator.util.AnimationReader;
 import cs3500.animator.view.EditView;
 import cs3500.animator.view.IEditView;
 import cs3500.animator.view.IView;
@@ -27,6 +29,7 @@ import javax.swing.Timer;
  * current tick and tell view to update when a new tick happens.
  */
 public class AnimationController implements IController, ActionListener {
+
   private IView v;
   protected IModel m;
 
@@ -47,14 +50,11 @@ public class AnimationController implements IController, ActionListener {
       if (m.getCurrentTick() < m.returnMaxTick()) {
         currentTick = currentTick + 1;
         m.setTick(currentTick);
-      }
-      else if (m.getCurrentTick() == m.returnMaxTick()) {
-        //if (v instanceof EditView) {
-          if (((EditView) v).getCheckState()) {
-            currentTick = 0;
-            m.setTick(currentTick);
-          }
-        //}
+      } else if (m.getCurrentTick() == m.returnMaxTick()) {
+        if (((EditView) v).getCheckState()) {
+          currentTick = 0;
+          m.setTick(currentTick);
+        }
       }
       v.refresh();
     }
@@ -70,7 +70,9 @@ public class AnimationController implements IController, ActionListener {
   public AnimationController(IView v, IModel m) {
     this.v = v;
     this.m = m;
-    if (v instanceof EditView) ((EditView)v).addActionListener(this);
+    if (v instanceof EditView) {
+      ((EditView) v).addActionListener(this);
+    }
   }
 
   @Override
@@ -96,30 +98,33 @@ public class AnimationController implements IController, ActionListener {
   public void actionPerformed(ActionEvent e) {
     IEditView v = (IEditView) this.v;
     switch (e.getActionCommand()) {
-      //read from the input textfield
+
       case "Play Button":
         timer.start();
         break;
+      //Resume/Pause button will start stop the animation. Changes the color to green if animation
+      // is playing, change color to red if animation is not playing.
       case "Resume Button":
         if (timer.isRunning()) {
           timer.stop();
           v.changeResumeButtonColor(Color.RED);
-        }
-        else {
+        } else {
           timer.start();
           v.changeResumeButtonColor(Color.GREEN);
         }
         break;
+
+      // Resetarts the timer.
       case "Restart Button":
         if (currentTick >= m.getMaxTick()) {
           currentTick = 0;
           timer.start();
-        }
-        else {
+        } else {
           currentTick = 0;
           timer.restart();
         }
         break;
+
       case "Speed Up Button":
         int newDelay1 = DELAY - (DELAY / 5);
         DELAY = newDelay1;
@@ -130,8 +135,11 @@ public class AnimationController implements IController, ActionListener {
         DELAY = newDelay2;
         timer.setDelay(newDelay2);
         break;
+
+      //Repeat box actions will be handled in the swing timer actionListener implementation above.
       case "Repeat Box":
         break;
+
       case "Load Button":
         File loadLocation = v.getLoadLocation();
         System.out.println("load " + loadLocation.getAbsolutePath());
@@ -143,17 +151,15 @@ public class AnimationController implements IController, ActionListener {
           System.out.println("open load file failed");
           ex.printStackTrace();
         }
-
         //reset time
         timer.stop();
         currentTick = 0;
-
-        //this.m = AnimationReader.parseFile(inputFileContent, new AnimationModel.Builder());
-
-        v.refresh();
+        this.m = AnimationReader.parseFile(inputFileContent, new AnimationModel.Builder());
+        v.clearAnimatorPanel();
+        v.loadNewAnimatorPanel(m, m.getCanvasWidth(), m.getCanvasHeight());
         timer.start();
-
         break;
+
       case "Save SVG Button":
         File saveLocation = v.getSaveLocation();
         System.out.println(saveLocation.getAbsolutePath());
@@ -175,26 +181,26 @@ public class AnimationController implements IController, ActionListener {
         int time = 0, x = 0, y = 0, red = 0, green = 0, blue = 0;
         double width = 0.0, height = 0.0;
         try {
-         String[] positions = tmp4.get(2).split(" ");
-         if (positions.length != 2) {
-           throw new IllegalArgumentException("input for position "
-               + "must be 2 integer seperated by space.");
-         }
+          String[] positions = tmp4.get(2).split(" ");
+          if (positions.length != 2) {
+            throw new IllegalArgumentException("input for position "
+                + "must be 2 integer seperated by space.");
+          }
 
-         String[] colors = tmp4.get(5).split(" ");
-         if (colors.length != 3) {
-           throw new IllegalArgumentException("input for colors must be 3 integers sperated "
-               + "by spaces.");
-         }
+          String[] colors = tmp4.get(5).split(" ");
+          if (colors.length != 3) {
+            throw new IllegalArgumentException("input for colors must be 3 integers sperated "
+                + "by spaces.");
+          }
 
-         time = Integer.parseInt(tmp4.get(1));
-         x = Integer.parseInt(positions[0]);
-         y= Integer.parseInt(positions[1]);
-         width = Integer.parseInt(tmp4.get(3));
-         height = Integer.parseInt(tmp4.get(4));
-         red = Integer.parseInt(colors[0]);
-         green = Integer.parseInt(colors[1]);
-         blue = Integer.parseInt(colors[2]);
+          time = Integer.parseInt(tmp4.get(1));
+          x = Integer.parseInt(positions[0]);
+          y = Integer.parseInt(positions[1]);
+          width = Integer.parseInt(tmp4.get(3));
+          height = Integer.parseInt(tmp4.get(4));
+          red = Integer.parseInt(colors[0]);
+          green = Integer.parseInt(colors[1]);
+          blue = Integer.parseInt(colors[2]);
         } catch (IllegalArgumentException nfe) {
           v.showErrorMsg(nfe.getMessage());
         }
@@ -211,7 +217,7 @@ public class AnimationController implements IController, ActionListener {
           m.insertKeyframe(tmp2.get(0), tmpInt);
         } catch (NumberFormatException nfe) {
           v.showErrorMsg("You must enter an int for time");
-        } catch (IllegalArgumentException iae){
+        } catch (IllegalArgumentException iae) {
           v.showErrorMsg(iae.getMessage());
         }
         break;
@@ -222,7 +228,7 @@ public class AnimationController implements IController, ActionListener {
           m.deleteKeyframe(tmp3.get(0), tmpInt);
         } catch (NumberFormatException nfe) {
           v.showErrorMsg("You must enter an int for index");
-        } catch (IllegalArgumentException iae){
+        } catch (IllegalArgumentException iae) {
           v.showErrorMsg(iae.getMessage());
         }
         break;
@@ -230,7 +236,7 @@ public class AnimationController implements IController, ActionListener {
         List<String> tmp = v.getShapePanelInput();
         try {
           m.createShape(tmp.get(0), tmp.get(1));
-        } catch (IllegalArgumentException iae){
+        } catch (IllegalArgumentException iae) {
           v.showErrorMsg(iae.getMessage());
         }
         break;
@@ -238,7 +244,7 @@ public class AnimationController implements IController, ActionListener {
         List<String> tmp1 = v.getShapePanelInput();
         try {
           m.removeShape(tmp1.get(1));
-        } catch (IllegalArgumentException iae){
+        } catch (IllegalArgumentException iae) {
           v.showErrorMsg(iae.getMessage());
         }
         break;

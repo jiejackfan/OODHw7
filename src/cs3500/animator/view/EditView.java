@@ -20,7 +20,16 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+/**
+ * EditView is a new View class so the user can have control of the animation and mutate it on the
+ *  fly. The
+ */
 public class EditView extends JFrame implements IEditView {
+
+  AnimatorPanel animatorPanel;
+
+  //variable for all panels in the frame
+  protected JPanel controlPanel, editPanel, insertPanel, p, shapePanel;
 
   //variable for contorl panel
   protected JButton playButton, resumeButton, restartButton, speedUpButton, slowDownButton;
@@ -28,9 +37,6 @@ public class EditView extends JFrame implements IEditView {
   protected JFileChooser loadWindow, saveSVGWindow, saveTextWindow;
   protected JLabel loadLabel, saveLabel;
   protected JCheckBox repeatBox;
-
-  //variable for all panels in the frame
-  protected JPanel controlPanel, editPanel, insertPanel, p, shapePanel;
 
   //variable for modifying keyframes of a shape. For edit panel.
   protected JButton modifyKeyframeButton;
@@ -45,6 +51,22 @@ public class EditView extends JFrame implements IEditView {
   protected JButton insertShapeButton, deleteShapeButton;
   protected JTextField shapeShapeName, shapeShapeType;
 
+  /**
+   * Constructor for the EditView. Set up the entire gui appearance by defining buttons, textboxes,
+   *  checkboxes, and their styles. Also sets up the layout of each component. This particular view
+   *  uses box layout throughout and have 5 small vertical panels embedded within a main panel. The
+   *  5 small panels each have a functionality. The 1st panel is the AnimatorPanel which will
+   *  display the animation. The 2nd panel is the ControlPanel which have playback controls like
+   *  restart, speed up, slow down, pause/resume, repeat. The 3rd panel is the ModifyPanel where
+   *  user can modify a specific keyframe. The 4th panel is the insert/delete keyframe panel where
+   *  the user can create new / delete old keyframes of a particular shape. The 5th panel is a
+   *  create/delete Shape panel.
+   * @param m reference of a model to be passed into the AnimatorPanel.
+   * @param width width of the Animator Panel.
+   * @param height height of the Animator Panel.
+   * @param x x position of the Animator Panel.
+   * @param y y position of the Animator Panel.
+   */
   public EditView(ReadOnlyModel m, int width, int height, int x, int y) {
     super("Swing View of Animation");
     setSize(width + 200, height);
@@ -56,10 +78,12 @@ public class EditView extends JFrame implements IEditView {
     p.setLayout(boxLayout);
     //p.setBorder(new EmptyBorder(new Insets(100, 150, 100, 150)));
 
-    AnimatorPanel animatorPanel = new AnimatorPanel(m);
+    // Implementation of the AnimatorPanel
+    animatorPanel = new AnimatorPanel(m);
     animatorPanel.setPreferredSize(new Dimension(width, height));
     p.add(animatorPanel);
 
+    //Implementation of the play back control panel.
     controlPanel = new JPanel();
     controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
     playButton = new JButton("Play");
@@ -297,6 +321,21 @@ public class EditView extends JFrame implements IEditView {
     }
     return null;
   }
+
+  @Override
+  public void clearAnimatorPanel() {
+    p.remove(this.animatorPanel);
+
+  }
+
+  @Override
+  public void loadNewAnimatorPanel(ReadOnlyModel m, int width, int height) {
+    animatorPanel = new AnimatorPanel(m);
+    animatorPanel.setPreferredSize(new Dimension(width, height));
+    p.add(animatorPanel, 0);
+    p.repaint();
+  }
+
 
 
 }

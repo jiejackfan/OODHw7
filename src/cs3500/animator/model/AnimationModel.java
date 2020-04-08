@@ -360,7 +360,7 @@ public class AnimationModel implements IModel {
       return output;
     }
     for (Map.Entry<String, IShape> mapPair : nameMap.entrySet()) {
-      String name = (String) mapPair.getKey();
+      String name = mapPair.getKey();
       output = output + "Shape " + name + " " + nameMap.get(name).getShapeName() + "\n";
       output = output + listOfMotionsToString(name, animation.get(nameMap.get(name)));
     }

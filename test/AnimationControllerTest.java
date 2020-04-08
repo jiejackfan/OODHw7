@@ -12,7 +12,7 @@ public class AnimationControllerTest {
   // Helper function to help setup model controller view objects so tests can
   //  manipulate those objects.
   IModel m = new AnimationModel();
-  IEditView v = new EditView((ReadOnlyModel) m, 800, 800, 0, 0);
+  IEditView v = new EditView(m, 800, 800, 0, 0);
   IController c = new AnimationController(v, m);
 
   @Test
